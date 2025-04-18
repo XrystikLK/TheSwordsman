@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -62,7 +63,7 @@ public class LoadMap
             {
                 // player._position.X = 0;
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                Console.WriteLine(collision);
+                
                 // player._position.X = collision.Top + player._hitboxRect.Width;
                 // if (player._position.X > 0.0f)
                 // {
@@ -74,18 +75,19 @@ public class LoadMap
                 // }
             }
         }
-        Console.WriteLine("-----------------------------");
+        //Console.WriteLine("-----------------------------");
         
         intersections = getIntersectingTilesVertical(player._hitboxRect);
-        
+        var allCollisions = new List<Vector2>();
         foreach (var rect in intersections)
         {
             if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
             {
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                player._position.Y = collision.Y - 72; 
+                allCollisions.Add(new Vector2(rect.X * _tileSize, rect.Y * _tileSize));
+                
+                
                 // Console.WriteLine(collision);
-                // break;
                 // player._position.Y = collision.Top + player._hitboxRect.Width;
                 // if (player._position.Y > 0.0f)
                 // {
@@ -96,6 +98,37 @@ public class LoadMap
                 //     player._hitboxRect.Y = collision.Bottom;
                 // }
             }
+            
+        }
+        
+        var uniqueCount = new HashSet<float>(allCollisions.Select(i => i.Y)).Count;
+        foreach (var rect in intersections)
+        {
+            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
+            {
+                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
+                
+                if (allCollisions.Count > 3 && uniqueCount > 1)
+                { 
+                    player._position.Y = player._position.Y;
+                    if (uniqueCount == 1) player._position.Y += player._position.Y = player._position.Y;;
+                }
+                else if (uniqueCount == 1)
+                {
+                    player._position.Y = collision.Y - 72;
+                    if (allCollisions.Count == 1) player._position.Y = player._position.Y;
+                }
+                
+            }
+        }
+
+        foreach (var collision in allCollisions) Console.WriteLine(collision);
+        
+        if (allCollisions.Count > 3 && uniqueCount > 1)
+        {
+            
+            player._position.X = allCollisions[0].X - player._hitboxRect.Width + _tileSize + 2;
+            // Console.WriteLine($"{allCollisions[0].X} -----------------------------------------------------");
         }
     }
 

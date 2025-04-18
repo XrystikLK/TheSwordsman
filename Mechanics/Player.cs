@@ -15,15 +15,18 @@ public class Player
     
     public Vector2 _position;
     public Rectangle _hitboxRect => new Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
+    public bool isDebug;
     
     private string _currentDirection;
     private Texture2D _debugTexture;
     private Viewport _viewport;
     
+    
 
-    public Player(Vector2 position, ContentManager content, GraphicsDevice graphicsDevice)
+    public Player(Vector2 position, bool isDebug, ContentManager content, GraphicsDevice graphicsDevice)
     {
         this._position = position;
+        this.isDebug = isDebug;
         this._currentDirection = "Idle";
         _viewport = graphicsDevice.Viewport;
             
@@ -104,7 +107,7 @@ public class Player
                 _heroIdle.DrawFrame(spriteBatch, _position);
                 break;
         }
-        spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
+        if (isDebug) spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
         
         // Для отладки можно отрисовать хитбокс
         // spriteBatch.DrawRectangle(_hitboxRect, Color.Red);
