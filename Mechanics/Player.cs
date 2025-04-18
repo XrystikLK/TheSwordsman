@@ -13,23 +13,13 @@ public class Player
     private AnimatedTexture _heroWalkLeft;
     private AnimatedTexture _heroWalkRight;
     
-    private Vector2 _position;
-    public Rectangle _hitboxRect;
+    public Vector2 _position;
+    public Rectangle _hitboxRect => new Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
+    
     private string _currentDirection;
     private Texture2D _debugTexture;
     private Viewport _viewport;
-    public Vector2 Position => _position;
     
-    
-    public Rectangle Hitbox => new  Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
-    public ref Rectangle GetHitboxRef()
-    {
-        _hitboxRect.X = (int)_position.X + 30;
-        _hitboxRect.Y = (int)_position.Y + 10;
-        _hitboxRect.Width = 37;
-        _hitboxRect.Height = 62;
-        return ref _hitboxRect;
-    }
 
     public Player(Vector2 position, ContentManager content, GraphicsDevice graphicsDevice)
     {
@@ -48,6 +38,7 @@ public class Player
         
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
         _debugTexture.SetData(new[] { Color.White });
+        
     }
 
     public void ProcessMovement(GameTime gameTime)
@@ -76,8 +67,8 @@ public class Player
 
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
-        if (Hitbox.X < 0) _position.X = -30;
-        if (Hitbox.X + Hitbox.Width > _viewport.Width) _position.X = _viewport.Width - 62;
+        if (_hitboxRect.X < 0) _position.X = -30;
+        if (_hitboxRect.X + _hitboxRect.Width > _viewport.Width + 5) _position.X = _viewport.Width - 62;
 
     }
 
@@ -113,7 +104,7 @@ public class Player
                 _heroIdle.DrawFrame(spriteBatch, _position);
                 break;
         }
-        spriteBatch.Draw(_debugTexture, Hitbox, Color.Red * 0.5f);
+        spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
         
         // Для отладки можно отрисовать хитбокс
         // spriteBatch.DrawRectangle(_hitboxRect, Color.Red);

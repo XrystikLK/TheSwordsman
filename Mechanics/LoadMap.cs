@@ -53,44 +53,48 @@ public class LoadMap
         }
     }
 
-    public void Update(GameTime gameTime, Rectangle playerHitbox, Vector2 playerPosition)
+    public void Update(Player player)
     {
-        intersections = getIntersectingTilesHorizontal(playerHitbox);
-
+        intersections = getIntersectingTilesHorizontal(player._hitboxRect);
         foreach (var rect in intersections)
         {
             if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
             {
-                
+                // player._position.X = 0;
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                if (playerPosition.X > 0.0f)
-                {
-                    playerHitbox.X = collision.Left - playerHitbox.Width;
-                }
-                else if (playerPosition.X < 0.0f)
-                {
-                    playerHitbox.X = collision.Right;
-                }
-                Console.WriteLine(playerHitbox.X + "," + playerHitbox.Y);
+                Console.WriteLine(collision);
+                // player._position.X = collision.Top + player._hitboxRect.Width;
+                // if (player._position.X > 0.0f)
+                // {
+                //     player._hitboxRect.X = collisions.Left - player._hitboxRect.Width;
+                // }
+                // else if (player._position.X < 0.0f)
+                // {
+                //     player._hitboxRect.X = collision.Right;
+                // }
             }
         }
+        Console.WriteLine("-----------------------------");
         
-        intersections = getIntersectingTilesVertical(playerHitbox);
+        intersections = getIntersectingTilesVertical(player._hitboxRect);
         
         foreach (var rect in intersections)
         {
             if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
             {
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                if (playerPosition.Y > 0.0f)
-                {
-                    playerHitbox.Y = collision.Top - playerHitbox.Height;
-                }
-                else if (playerPosition.Y < 0.0f)
-                {
-                    playerHitbox.Y = collision.Bottom;
-                }
-                Console.WriteLine(playerHitbox.X + "," + playerHitbox.Y);
+                player._position.Y = collision.Y - 72; 
+                // Console.WriteLine(collision);
+                // break;
+                // player._position.Y = collision.Top + player._hitboxRect.Width;
+                // if (player._position.Y > 0.0f)
+                // {
+                //     player._hitboxRect.Y = collision.Top - player._hitboxRect.Height;
+                // }
+                // else if (player._position.Y < 0.0f)
+                // {
+                //     player._hitboxRect.Y = collision.Bottom;
+                // }
             }
         }
     }

@@ -63,9 +63,10 @@ public class Game1 : Game
         _player.ProcessMovement(gameTime);
         _player.Update(gameTime);
         
-        _mapCollisions.Update(gameTime, _player.Hitbox, _player.Position);
+        _mapCollisions.Update(_player);
         // TODO: Add your update logic here
-        if (_player.Hitbox.Intersects(_whiteSquare))
+        // Console.WriteLine(_player._hitboxRect);
+        if (_player._hitboxRect.Intersects(_whiteSquare))
         {
             Console.WriteLine("You hit the wall");
         }
