@@ -43,7 +43,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
         _playerPosition = new Vector2(100, 100);
-        _player = new Player(_playerPosition, false, Content, GraphicsDevice);
+        _player = new Player(_playerPosition, true, Content, GraphicsDevice);
         
         testTexture = new Texture2D(GraphicsDevice, 1, 1);
         testTexture.SetData(new[] { Color.White });
@@ -65,7 +65,7 @@ public class Game1 : Game
         
         _mapCollisions.Update(_player);
         // TODO: Add your update logic here
-        Console.WriteLine(_player._hitboxRect.Y - _player._hitboxRect.Height + 16);
+        // Console.WriteLine(_player._hitboxRect.Y - _player._hitboxRect.Height + 16);
         if (_player._hitboxRect.Intersects(_whiteSquare))
         {
             Console.WriteLine("You hit the wall");

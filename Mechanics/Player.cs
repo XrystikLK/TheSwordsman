@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SomeTest;
 
+/// <summary>
+/// Класс игрового персонажа с анимациями и обработкой управления
+/// </summary>
 public class Player
 {
     private AnimatedTexture _heroIdle;
@@ -23,6 +26,13 @@ public class Player
     
     
 
+    /// <summary>
+    /// Конструктор игрового персонажа
+    /// </summary>
+    /// <param name="position">Начальная позиция персонажа</param>
+    /// <param name="isDebug">Включить ли режим отладки</param>
+    /// <param name="content">Менеджер контента для загрузки текстур</param>
+    /// <param name="graphicsDevice">Графическое устройство</param>
     public Player(Vector2 position, bool isDebug, ContentManager content, GraphicsDevice graphicsDevice)
     {
         this._position = position;
@@ -44,6 +54,10 @@ public class Player
         
     }
 
+    /// <summary>
+    /// Обрабатывает ввод с клавиатуры и перемещает персонажа
+    /// </summary>
+    /// <param name="gameTime">Время игрового цикла</param>
     public void ProcessMovement(GameTime gameTime)
     {
         KeyboardState newState = Keyboard.GetState();
@@ -70,11 +84,16 @@ public class Player
 
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
+        // Ограничение движения по горизонтали
         if (_hitboxRect.X < 0) _position.X = -30;
         if (_hitboxRect.X + _hitboxRect.Width > _viewport.Width + 5) _position.X = _viewport.Width - 62;
 
     }
 
+    /// <summary>
+    /// Обновляет анимацию персонажа
+    /// </summary>
+    /// <param name="gameTime">Время игрового цикла</param>
     public void Update(GameTime gameTime)
     {
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -93,6 +112,10 @@ public class Player
         }
     }
     
+    /// <summary>
+    /// Отрисовывает персонажа и его хитбокс(при включенной deBug режиме)
+    /// </summary>
+    /// <param name="spriteBatch">Объект для отрисовки спрайтов</param>
     public void Draw(SpriteBatch spriteBatch)
     {
         switch (_currentDirection)
@@ -108,9 +131,6 @@ public class Player
                 break;
         }
         if (isDebug) spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
-        
-        // Для отладки можно отрисовать хитбокс
-        // spriteBatch.DrawRectangle(_hitboxRect, Color.Red);
     }
     
 }

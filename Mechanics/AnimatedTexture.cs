@@ -7,30 +7,22 @@ using Microsoft.Xna.Framework.Graphics;
 /// </summary>
 public class AnimatedTexture
 {
-    // Number of frames in the animation.
     private int frameCount;
-    
-    // The animation spritesheet.
     private Texture2D myTexture;
-    
-    // The number of frames to draw per second.
     private float timePerFrame;
-    
-    // The current frame being drawn.
     private int frame;
-    
-    // Total amount of time the animation has been running.
     private float totalElapsed;
-    
-    // Is the animation currently running?
     private bool isPaused;
-
-    // The current rotation, scale and draw depth for the animation.
     public float Rotation, Scale, Depth;
-    
-    // The origin point of the animated texture.
     public Vector2 Origin;
 
+    /// <summary>
+    /// Инициализирует новый экземпляр анимированной текстуры
+    /// </summary>
+    /// <param name="origin">Точка вращения и масштабирования</param>
+    /// <param name="rotation">Начальный угол вращения в радианах</param>
+    /// <param name="scale">Начальный масштабный коэффициент</param>
+    /// <param name="depth">Начальное значение глубины (0 = передний план, 1 = задний план)</param>
     public AnimatedTexture(Vector2 origin, float rotation, float scale, float depth)
     {
         this.Origin = origin;
@@ -39,6 +31,13 @@ public class AnimatedTexture
         this.Depth = depth;
     }
 
+    /// <summary>
+    /// Загружает текстуру и настраивает параметры анимации
+    /// </summary>
+    /// <param name="content">Менеджер контента для загрузки ресурсов</param>
+    /// <param name="asset">Имя файла текстуры</param>
+    /// <param name="frameCount">Общее количество кадров анимации</param>
+    /// <param name="framesPerSec">Скорость анимации в кадрах в секунду</param>
     public void Load(ContentManager content, string asset, int frameCount, int framesPerSec)
     {
         this.frameCount = frameCount;
@@ -49,6 +48,10 @@ public class AnimatedTexture
         isPaused = false;
     }
 
+    /// <summary>
+    /// Обновляет текущий кадр анимации на основе прошедшего времени
+    /// </summary>
+    /// <param name="elapsed">Время, прошедшее с последнего обновления в секундах</param>
     public void UpdateFrame(float elapsed)
     {
         if (isPaused)
@@ -57,17 +60,27 @@ public class AnimatedTexture
         if (totalElapsed > timePerFrame)
         {
             frame++;
-            // Keep the Frame between 0 and the total frames, minus one.
             frame %= frameCount;
             totalElapsed -= timePerFrame;
         }
     }
 
+    /// <summary>
+    /// Отрисовывает текущий кадр анимации
+    /// </summary>
+    /// <param name="batch">Объект SpriteBatch для отрисовки</param>
+    /// <param name="screenPos">Позиция отрисовки на экране</param>
     public void DrawFrame(SpriteBatch batch, Vector2 screenPos)
     {
         DrawFrame(batch, frame, screenPos);
     }
 
+    /// <summary>
+    /// Отрисовывает указанный кадр анимации
+    /// </summary>
+    /// <param name="batch">Объект SpriteBatch для отрисовки</param>
+    /// <param name="frame">Номер конкретного кадра для отрисовки</param>
+    /// <param name="screenPos">Позиция отрисовки на экране</param>
     public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
     {
         int FrameWidth = myTexture.Width / frameCount;
@@ -76,29 +89,30 @@ public class AnimatedTexture
         batch.Draw(myTexture, screenPos, sourcerect, Color.White,
             Rotation, Origin, Scale, SpriteEffects.None, Depth);
     }
-
+    /// Получает состояние паузы анимации
     public bool IsPaused
     {
         get { return isPaused; }
     }
 
+    /// Сбрасывает анимацию на первый кадр
     public void Reset()
     {
         frame = 0;
         totalElapsed = 0f;
     }
-
+    /// Останавливает и сбрасывает анимацию
     public void Stop()
     {
         Pause();
         Reset();
     }
-
+    /// Возобновляет воспроизведение анимации
     public void Play()
     {
         isPaused = false;
     }
-
+    /// Приостанавливает анимацию на текущем кадре
     public void Pause()
     {
         isPaused = true;

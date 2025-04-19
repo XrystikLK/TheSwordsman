@@ -56,28 +56,7 @@ public class LoadMap
 
     public void Update(Player player)
     {
-        intersections = getIntersectingTilesHorizontal(player._hitboxRect);
-        foreach (var rect in intersections)
-        {
-            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
-            {
-                // player._position.X = 0;
-                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                
-                // player._position.X = collision.Top + player._hitboxRect.Width;
-                // if (player._position.X > 0.0f)
-                // {
-                //     player._hitboxRect.X = collisions.Left - player._hitboxRect.Width;
-                // }
-                // else if (player._position.X < 0.0f)
-                // {
-                //     player._hitboxRect.X = collision.Right;
-                // }
-            }
-        }
-        //Console.WriteLine("-----------------------------");
-        
-        intersections = getIntersectingTilesVertical(player._hitboxRect);
+        intersections = getIntersectingTiles(player._hitboxRect);
         var allCollisions = new List<Vector2>();
         foreach (var rect in intersections)
         {
@@ -86,71 +65,53 @@ public class LoadMap
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
                 allCollisions.Add(new Vector2(rect.X * _tileSize, rect.Y * _tileSize));
                 
-                
-                // Console.WriteLine(collision);
-                // player._position.Y = collision.Top + player._hitboxRect.Width;
-                // if (player._position.Y > 0.0f)
-                // {
-                //     player._hitboxRect.Y = collision.Top - player._hitboxRect.Height;
-                // }
-                // else if (player._position.Y < 0.0f)
-                // {
-                //     player._hitboxRect.Y = collision.Bottom;
                 // }
             }
             
         }
         
         var uniqueCount = new HashSet<float>(allCollisions.Select(i => i.Y)).Count;
-        foreach (var rect in intersections)
-        {
-            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
+        // Нужно сделать разделение на координаты по OX OY
+        var intersectionWithOX = allCollisions
+            .GroupBy(v => v.Y)                     // Группируем по Y
+            .Where(g => g.Count() > 1)             // Берем только группы с 2+ элементами
+            .SelectMany(g => g)                     // "Разгруппировываем"
+            .ToList();;
+        var intersectionWithOY = allCollisions
+            .Except(intersectionWithOX)                         // Исключаем элементы из sameY
+            .ToList();
+        
+        foreach (var collision in allCollisions)
+        { 
+            Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
+            Console.WriteLine("-----------------------------------------------------------");
+            if ((intersectionWithOX.Count >= 1 && intersectionWithOY.Count >= 1) || intersectionWithOX.Count <= 1)
             {
-                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                
-                if (allCollisions.Count > 3 && uniqueCount > 1)
-                { 
-                    player._position.Y = player._position.Y;
-                    if (uniqueCount == 1) player._position.Y += player._position.Y = player._position.Y;;
-                }
-                else if (uniqueCount == 1)
-                {
-                    player._position.Y = collision.Y - 72;
-                    if (allCollisions.Count == 1) player._position.Y = player._position.Y;
-                }
-                
+                player._position.Y = player._position.Y;
             }
-        }
-
-        foreach (var collision in allCollisions) Console.WriteLine(collision);
-        
-        if (allCollisions.Count > 3 && uniqueCount > 1)
-        {
+            else
+            {
+                player._position.Y = collision.Y - 72;
+            }
             
-            player._position.X = allCollisions[0].X - player._hitboxRect.Width + _tileSize + 2;
-            // Console.WriteLine($"{allCollisions[0].X} -----------------------------------------------------");
-        }
-    }
-
-    public List<Rectangle> getIntersectingTilesHorizontal(Rectangle target) {
-        intersections.Clear();
-        
-        int startX = target.X / _tileSize;
-        int endX = (target.X + target.Width) / _tileSize;
-        int startY = target.Y / _tileSize;
-        int endY = (target.Y + target.Height) / _tileSize;
-
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                if (map.ContainsKey(new Vector2(x, y))) {
-                    intersections.Add(new Rectangle(x, y, _tileSize, _tileSize));
-                }
+            // Находиться ли игрок на земле
+            if (intersectionWithOX.Count == 0)
+            {
+                
+            }
+            
+            if ((allCollisions.Count > 3 && uniqueCount > 1)) // || intersectionWithOX.Count == 0
+            {
+                player._position.X = allCollisions[0].X - player._hitboxRect.Width + _tileSize + 2;
+                // Console.WriteLine($"{allCollisions[0].X} -----------------------------------------------------");
             }
         }
-
-        return intersections;
+        //Console.WriteLine("-----------------------------------------------------------");
+    
+        
+        
     }
-    public List<Rectangle> getIntersectingTilesVertical(Rectangle target) {
+    public List<Rectangle> getIntersectingTiles(Rectangle target) {
         intersections.Clear();
         
         int startX = target.X / _tileSize;
