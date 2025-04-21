@@ -28,3 +28,4 @@ C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\Hero
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunningLeft_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunningRight_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\TextureAtlas\ALL_content.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroJump_SpriteList.xnb

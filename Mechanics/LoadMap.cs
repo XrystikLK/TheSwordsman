@@ -64,52 +64,66 @@ public class LoadMap
             {
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
                 allCollisions.Add(new Vector2(rect.X * _tileSize, rect.Y * _tileSize));
-                
-                // }
             }
-            
         }
-        
-        var uniqueCount = new HashSet<float>(allCollisions.Select(i => i.Y)).Count;
-        // Нужно сделать разделение на координаты по OX OY
         var intersectionWithOX = allCollisions
-            .GroupBy(v => v.Y)                     // Группируем по Y
-            .Where(g => g.Count() > 1)             // Берем только группы с 2+ элементами
-            .SelectMany(g => g)                     // "Разгруппировываем"
+            .GroupBy(v => v.Y)                     
+            .Where(g => g.Count() > 1)            
+            .SelectMany(g => g)                    
             .ToList();;
         var intersectionWithOY = allCollisions
-            .Except(intersectionWithOX)                         // Исключаем элементы из sameY
+            .Except(intersectionWithOX)                         
             .ToList();
+        
+        // if (allCollisions.Count == 0) player.IsGrounded = false;
+        
+        Console.WriteLine(player.IsGrounded);
+        if (allCollisions.Count == 1 && player.IsGrounded)
+        {
+            intersectionWithOX = allCollisions;
+            intersectionWithOY.Clear();
+        } 
+        
+        
+        
         
         foreach (var collision in allCollisions)
         { 
-            Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
-            Console.WriteLine("-----------------------------------------------------------");
-            if ((intersectionWithOX.Count >= 1 && intersectionWithOY.Count >= 1) || intersectionWithOX.Count <= 1)
+            //Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
+            //Console.WriteLine(collision);
+            
+            // Обработка столкновения по оси OY
+            if (intersectionWithOX.Count != 0 )
             {
-                player._position.Y = player._position.Y;
+                player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
+                player.IsGrounded = true;
             }
+            //Иначе игрок должен падать 
             else
-            {
-                player._position.Y = collision.Y - 72;
-            }
+                player.IsGrounded = false;
             
-            // Находиться ли игрок на земле
-            if (intersectionWithOX.Count == 0)
+            // Обработка столкновения по оси OX
+            if (intersectionWithOY.Count >= 1)
             {
-                
-            }
-            
-            if ((allCollisions.Count > 3 && uniqueCount > 1)) // || intersectionWithOX.Count == 0
-            {
-                player._position.X = allCollisions[0].X - player._hitboxRect.Width + _tileSize + 2;
-                // Console.WriteLine($"{allCollisions[0].X} -----------------------------------------------------");
+                if (player.IsGrounded)
+                {
+                    if (player._velocity.X > 0)
+                        player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
+                    else if (player._velocity.X < 0)
+                        player._position.X = intersectionWithOX[0].X - _tileSize + 2;
+                }
+                // Обрабатывает столкновение игрока в воздухе
+                else
+                {
+                    if (player._velocity.X > 0)
+                        player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
+                    else if (player._velocity.X < 0)
+                        player._position.X = intersectionWithOY[0].X - _tileSize + 2;
+                }
             }
         }
+        //Console.WriteLine(player.IsGrounded);
         //Console.WriteLine("-----------------------------------------------------------");
-    
-        
-        
     }
     public List<Rectangle> getIntersectingTiles(Rectangle target) {
         intersections.Clear();
