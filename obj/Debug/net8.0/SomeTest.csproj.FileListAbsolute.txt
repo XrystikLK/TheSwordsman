@@ -25,7 +25,9 @@ C:\Users\ilya\RiderProjects\SomeTest\SomeTest\obj\Debug\net8.0\SomeTest.pdb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\obj\Debug\net8.0\SomeTest.genruntimeconfig.cache
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\obj\Debug\net8.0\ref\SomeTest.dll
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroIdle_SpriteList.xnb
-C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunningLeft_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunningRight_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\TextureAtlas\ALL_content.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroJump_SpriteList.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunning_SpriteList.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroFalling_SpriteList.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroJumpV2_SpriteList.xnb

@@ -13,9 +13,9 @@ namespace SomeTest;
 public class Player
 {
     private AnimatedTexture _heroIdle;
-    private AnimatedTexture _heroWalkLeft;
-    private AnimatedTexture _heroWalkRight;
+    private AnimatedTexture _heroWalking;
     private AnimatedTexture _heroJump;
+    private AnimatedTexture _heroFalling;
     
     public Vector2 _position;
     public Rectangle _hitboxRect => new Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
@@ -47,24 +47,23 @@ public class Player
     {
         this._position = position;
         this.isDebug = isDebug;
-        this._currentDirection = "Idle";
+        this._currentDirection = "Right";
         _viewport = graphicsDevice.Viewport;
             
         _heroIdle = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
-        _heroIdle.Load(content, "Hero/HeroIdle_SpriteList", 4, 8);
+        _heroIdle.Load(content, "Hero/HeroIdle_SpriteList", 4, 6);
         
-        _heroWalkLeft = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
-        _heroWalkLeft.Load(content, "Hero/HeroRunningLeft_SpriteList", 6, 8);
-        
-        _heroWalkRight = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
-        _heroWalkRight.Load(content, "Hero/HeroRunningRight_SpriteList", 6, 8);
+        _heroWalking = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
+        _heroWalking.Load(content, "Hero/HeroRunning_SpriteList", 6, 8);
         
         _heroJump = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
-        _heroJump.Load(content, "Hero/HeroJump_SpriteList", 4, 4);
+        _heroJump.Load(content, "Hero/HeroJumpV2_SpriteList", 7, 8);
+        
+        _heroFalling = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);
+        _heroFalling.Load(content, "Hero/HeroFalling_SpriteList", 2, 4);
         
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
         _debugTexture.SetData(new[] { Color.White });
-        
     }
 
     /// <summary>
@@ -102,7 +101,6 @@ public class Player
         {
             _velocity.Y = JumpForce;
             IsGrounded = false;
-            _currentDirection = "Jump";
         }
 
         // Применяем гравитацию, если не на земле
@@ -110,17 +108,14 @@ public class Player
         {
             _velocity.Y += Gravity * deltaTime;
         }
-        else
+        // Сбрасываем вертикальную скорость на земле
+        else if (_velocity.Y > 0)
         {
-            _velocity.Y = 0; // Сбрасываем вертикальную скорость на земле
+            _velocity.Y = 0; 
         }
         
         _position += _velocity * deltaTime;
         //Console.WriteLine(_velocity);
-        if (Math.Abs(_velocity.X) < 0.1f && _velocity.Y == 0)
-        {
-            _currentDirection = "Idle";
-        }
         
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
@@ -136,45 +131,86 @@ public class Player
     /// <param name="gameTime">Время игрового цикла</param>
     public void Update(GameTime gameTime)
     {
+        //Console.WriteLine(IsGrounded);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        switch (_currentDirection)
-        {
-            case "Left":
-                _heroWalkLeft.UpdateFrame(elapsed);
-                break;
-            case "Right":
-                _heroWalkRight.UpdateFrame(elapsed);
-                break;
-            case "Jump":
-                _heroJump.UpdateFrame(elapsed);
-                break;
-            default:
-                _heroIdle.UpdateFrame(elapsed);
-                break;
-        }
+        if (_velocity.X != 0 && IsGrounded)
+            _heroWalking.UpdateFrame(elapsed);
+        if (_velocity.X == 0 && IsGrounded)
+            _heroIdle.UpdateFrame(elapsed);
+        if (!IsGrounded)
+            _heroJump.UpdateFrame(elapsed);
+        if (_velocity.Y > 1)
+            _heroFalling.UpdateFrame(elapsed);
+        
+        // switch (_currentDirection)
+        // {
+        //     case "Left":
+        //         _heroWalkLeft.UpdateFrame(elapsed);
+        //         break;
+        //     case "Right":
+        //         _heroWalkRight.UpdateFrame(elapsed);
+        //         break;
+        //     case "Jump":
+        //         _heroJump.UpdateFrame(elapsed);
+        //         break;
+        //     default:
+        //         _heroIdle.UpdateFrame(elapsed);
+        //         break;
+        // }
+        // if (_velocity.Y > 1)
+        //     _heroFalling.UpdateFrame(elapsed);
     }
     
     /// <summary>
-    /// Отрисовывает персонажа и его хитбокс(при включенной deBug режиме)
+    /// Отрисовывает персонажа и его хитбокс(при включенной debug режиме)
     /// </summary>
     /// <param name="spriteBatch">Объект для отрисовки спрайтов</param>
     public void Draw(SpriteBatch spriteBatch)
     {
-        switch (_currentDirection)
+        if (IsGrounded)
         {
-            case "Left":
-                _heroWalkLeft.DrawFrame(spriteBatch, _position);
-                break;
-            case "Right":
-                _heroWalkRight.DrawFrame(spriteBatch, _position);
-                break;
-            case "Jump":
-                _heroJump.DrawFrame(spriteBatch, _position);
-                break;
-            default:
+            if (_velocity.X < 0)
+                _heroWalking.DrawFrame(spriteBatch, _position, true);
+            else if (_velocity.X > 0)
+                _heroWalking.DrawFrame(spriteBatch, _position);
+            
+            if (_velocity.X == 0 && _currentDirection == "Left")
+                _heroIdle.DrawFrame(spriteBatch, _position, true);
+            else if(_velocity.X == 0 && _currentDirection == "Right")
                 _heroIdle.DrawFrame(spriteBatch, _position);
-                break;
         }
+
+        if (_currentDirection == "Right")
+        {
+           if (!IsGrounded && _velocity.Y < 0)
+               _heroJump.DrawFrame(spriteBatch, _position);
+           else if (_velocity.Y > 1)
+               _heroFalling.DrawFrame(spriteBatch, _position); 
+        }
+        else
+        {
+            if (!IsGrounded && _velocity.Y < 0)
+                _heroJump.DrawFrame(spriteBatch, _position, true);
+            else if (_velocity.Y > 1)
+                _heroFalling.DrawFrame(spriteBatch, _position, true); 
+        }
+        
+        // switch (_currentDirection)
+        // {
+        //     case "Left":
+        //         _heroWalkLeft.DrawFrame(spriteBatch, _position);
+        //         break;
+        //     case "Right":
+        //         _heroWalkRight.DrawFrame(spriteBatch, _position);
+        //         break;
+        //     case "Jump":
+        //         _heroJump.DrawFrame(spriteBatch, _position);
+        //         break;
+        //     default:
+        //         _heroIdle.DrawFrame(spriteBatch, _position);
+        //         break;
+        // }
+            
         if (isDebug) spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
     }
     

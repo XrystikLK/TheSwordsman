@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Hero/HeroFalling_SpriteList.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hero/HeroFalling_SpriteList.png
+
 #begin Hero/HeroIdle_SpriteList.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -37,7 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:Hero/HeroJump_SpriteList.png
 
-#begin Hero/HeroRunningLeft_SpriteList.png
+#begin Hero/HeroJumpV2_SpriteList.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -47,9 +59,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Hero/HeroRunningLeft_SpriteList.png
+/build:Hero/HeroJumpV2_SpriteList.png
 
-#begin Hero/HeroRunningRight_SpriteList.png
+#begin Hero/HeroRunning_SpriteList.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Hero/HeroRunningRight_SpriteList.png
+/build:Hero/HeroRunning_SpriteList.png
 
 #begin TextureAtlas/ALL_content.png
 /importer:TextureImporter

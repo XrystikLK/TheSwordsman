@@ -16,6 +16,7 @@ public class Game1 : Game
     
     private Texture2D testTexture;
     private Rectangle _whiteSquare;
+    private double testTime;
     
     private LoadMap _map;
     private LoadMap _mapCollisions;
@@ -34,7 +35,6 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
         _whiteSquare = new Rectangle(200, 200, 100, 100);
-
         base.Initialize();
     }
 
@@ -43,7 +43,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
         _playerPosition = new Vector2(100, 100);
-        _player = new Player(_playerPosition, false, Content, GraphicsDevice);
+        _player = new Player(_playerPosition, true, Content, GraphicsDevice);
         
         testTexture = new Texture2D(GraphicsDevice, 1, 1);
         testTexture.SetData(new[] { Color.White });
@@ -62,14 +62,27 @@ public class Game1 : Game
         
         _player.ProcessMovement(gameTime);
         _player.Update(gameTime);
-        
         _mapCollisions.Update(_player);
         // TODO: Add your update logic here
-        //Console.WriteLine(_player._hitboxRect);
+        //Console.WriteLine(_player._velocity);
+        
+        
+        // testTime += gameTime.ElapsedGameTime.TotalSeconds;
+        // if (testTime >= 1.0)
+        // {
+        //     Console.WriteLine("Game Over");
+        //     Random random = new Random();
+        //     Window.Position = new Point(random.Next(100, 450), random.Next(100, 450));
+        //     _graphics.ApplyChanges();
+        //     testTime = 0;
+        // }
+        
+        
         if (_player._hitboxRect.Intersects(_whiteSquare))
         {
             Console.WriteLine("You hit the wall");
         }
+        
         base.Update(gameTime);
     }
 

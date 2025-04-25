@@ -57,13 +57,13 @@ public class LoadMap
     public void Update(Player player)
     {
         intersections = getIntersectingTiles(player._hitboxRect);
-        var allCollisions = new List<Vector2>();
+        var allCollisions = new List<Rectangle>();
         foreach (var rect in intersections)
         {
             if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
             {
                 Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                allCollisions.Add(new Vector2(rect.X * _tileSize, rect.Y * _tileSize));
+                allCollisions.Add(collision);
             }
         }
         var intersectionWithOX = allCollisions
@@ -74,54 +74,79 @@ public class LoadMap
         var intersectionWithOY = allCollisions
             .Except(intersectionWithOX)                         
             .ToList();
+
+        // if (allCollisions.Count() == 1)
+        // {
+        //     intersectionWithOX.Clear();
+        //     intersectionWithOY.Clear();
+        //     var intersection = allCollisions.First();
+        //     bool fromLeft = player._hitboxRect.Right > intersection.Left && player._hitboxRect.Left < intersection.Left;
+        //     bool fromRight = player._hitboxRect.Left < intersection.Right && player._hitboxRect.Right > intersection.Right;
+        //     bool fromTop = player._hitboxRect.Bottom > intersection.Top && player._hitboxRect.Top < intersection.Top;
+        //     bool fromBottom = player._hitboxRect.Top < intersection.Bottom && player._hitboxRect.Bottom > intersection.Bottom;
+        //
+        //     // Если касание преимущественно по горизонтали
+        //     if ((fromLeft || fromRight) && !(fromTop || fromBottom))
+        //     {
+        //         intersectionWithOY.Add(intersection);
+        //     }
+        //     // Если касание преимущественно по вертикали
+        //     else if ((fromTop || fromBottom) && !(fromLeft || fromRight))
+        //     {
+        //         intersectionWithOX.Add(intersection);
+        //     }
+        // }
         
-        // if (allCollisions.Count == 0) player.IsGrounded = false;
+        if (allCollisions.Count == 0) player.IsGrounded = false;
         
-        Console.WriteLine(player.IsGrounded);
-        if (allCollisions.Count == 1 && player.IsGrounded)
+        if (allCollisions.Count == 1) // Проблема в IsGrounded - оно не выполняется
         {
-            intersectionWithOX = allCollisions;
-            intersectionWithOY.Clear();
+            var a = player._hitboxRect.Bottom;
+            var b = allCollisions.First().Top;
+            if (a < b + 5)
+            {
+                intersectionWithOX = allCollisions;
+                intersectionWithOY.Clear();
+            }
+            else
+            {
+                Console.WriteLine(player._hitboxRect.Bottom - allCollisions.First().Top);
+            }
         } 
         
         
+        //Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
+        //Console.WriteLine(collision);
+        if (intersectionWithOX.Count != 0)
+        {
+            player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
+            player.IsGrounded = true;
+        }
+        //Иначе игрок должен падать 
+        else
+            player.IsGrounded = false;
         
-        
-        foreach (var collision in allCollisions)
-        { 
-            //Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
-            //Console.WriteLine(collision);
-            
-            // Обработка столкновения по оси OY
-            if (intersectionWithOX.Count != 0 )
+        // Обработка столкновения по оси OX
+        if (intersectionWithOY.Count >= 1)
+        {
+            if (player.IsGrounded)
             {
-                player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
-                player.IsGrounded = true;
+                if (player._velocity.X > 0)
+                    player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
+                else if (player._velocity.X < 0)
+                    player._position.X = intersectionWithOX[0].X - _tileSize + 2;
             }
-            //Иначе игрок должен падать 
+            // Обрабатывает столкновение игрока в воздухе
             else
-                player.IsGrounded = false;
-            
-            // Обработка столкновения по оси OX
-            if (intersectionWithOY.Count >= 1)
             {
-                if (player.IsGrounded)
-                {
-                    if (player._velocity.X > 0)
-                        player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
-                    else if (player._velocity.X < 0)
-                        player._position.X = intersectionWithOX[0].X - _tileSize + 2;
-                }
-                // Обрабатывает столкновение игрока в воздухе
-                else
-                {
-                    if (player._velocity.X > 0)
-                        player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
-                    else if (player._velocity.X < 0)
-                        player._position.X = intersectionWithOY[0].X - _tileSize + 2;
-                }
+                if (player._velocity.X > 0)
+                    player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
+                else if (player._velocity.X < 0)
+                    player._position.X = intersectionWithOY[0].X - _tileSize + 2;
             }
         }
+                // Обработка столкновения по оси OY
+        
         //Console.WriteLine(player.IsGrounded);
         //Console.WriteLine("-----------------------------------------------------------");
     }

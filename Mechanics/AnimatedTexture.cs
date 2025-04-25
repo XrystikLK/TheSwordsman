@@ -70,9 +70,9 @@ public class AnimatedTexture
     /// </summary>
     /// <param name="batch">Объект SpriteBatch для отрисовки</param>
     /// <param name="screenPos">Позиция отрисовки на экране</param>
-    public void DrawFrame(SpriteBatch batch, Vector2 screenPos)
+    public void DrawFrame(SpriteBatch batch, Vector2 screenPos, bool isFlipped = false)
     {
-        DrawFrame(batch, frame, screenPos);
+        DrawFrame(batch, frame, screenPos, isFlipped);
     }
 
     /// <summary>
@@ -81,14 +81,25 @@ public class AnimatedTexture
     /// <param name="batch">Объект SpriteBatch для отрисовки</param>
     /// <param name="frame">Номер конкретного кадра для отрисовки</param>
     /// <param name="screenPos">Позиция отрисовки на экране</param>
-    public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
+    public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos, bool isFlipped = false)
     {
-        int FrameWidth = myTexture.Width / frameCount;
-        Rectangle sourcerect = new Rectangle(FrameWidth * frame, 0,
-            FrameWidth, myTexture.Height);
-        batch.Draw(myTexture, screenPos, sourcerect, Color.White,
-            Rotation, Origin, Scale, SpriteEffects.None, Depth);
+        int frameWidth = myTexture.Width / frameCount;
+        Rectangle sourceRect = new Rectangle(frameWidth * frame, 0, frameWidth, myTexture.Height);
+        // Determine flip effect
+        SpriteEffects effects = isFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+        batch.Draw(
+            myTexture,
+            screenPos,
+            sourceRect,
+            Color.White,
+            Rotation,
+            Origin,
+            Scale,
+            effects,
+            Depth);
     }
+
     /// Получает состояние паузы анимации
     public bool IsPaused
     {
