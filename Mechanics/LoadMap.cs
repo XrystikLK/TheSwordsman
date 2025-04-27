@@ -74,32 +74,9 @@ public class LoadMap
         var intersectionWithOY = allCollisions
             .Except(intersectionWithOX)                         
             .ToList();
-
-        // if (allCollisions.Count() == 1)
-        // {
-        //     intersectionWithOX.Clear();
-        //     intersectionWithOY.Clear();
-        //     var intersection = allCollisions.First();
-        //     bool fromLeft = player._hitboxRect.Right > intersection.Left && player._hitboxRect.Left < intersection.Left;
-        //     bool fromRight = player._hitboxRect.Left < intersection.Right && player._hitboxRect.Right > intersection.Right;
-        //     bool fromTop = player._hitboxRect.Bottom > intersection.Top && player._hitboxRect.Top < intersection.Top;
-        //     bool fromBottom = player._hitboxRect.Top < intersection.Bottom && player._hitboxRect.Bottom > intersection.Bottom;
-        //
-        //     // Если касание преимущественно по горизонтали
-        //     if ((fromLeft || fromRight) && !(fromTop || fromBottom))
-        //     {
-        //         intersectionWithOY.Add(intersection);
-        //     }
-        //     // Если касание преимущественно по вертикали
-        //     else if ((fromTop || fromBottom) && !(fromLeft || fromRight))
-        //     {
-        //         intersectionWithOX.Add(intersection);
-        //     }
-        // }
         
         if (allCollisions.Count == 0) player.IsGrounded = false;
-        
-        if (allCollisions.Count == 1) // Проблема в IsGrounded - оно не выполняется
+        if (allCollisions.Count == 1)
         {
             var a = player._hitboxRect.Bottom;
             var b = allCollisions.First().Top;
@@ -114,9 +91,7 @@ public class LoadMap
             }
         } 
         
-        
-        //Console.WriteLine($"OX - {intersectionWithOX.Count} OY - {intersectionWithOY.Count}");
-        //Console.WriteLine(collision);
+        // Обработка столкновения по оси OY
         if (intersectionWithOX.Count != 0)
         {
             player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
@@ -145,10 +120,7 @@ public class LoadMap
                     player._position.X = intersectionWithOY[0].X - _tileSize + 2;
             }
         }
-                // Обработка столкновения по оси OY
-        
-        //Console.WriteLine(player.IsGrounded);
-        //Console.WriteLine("-----------------------------------------------------------");
+                
     }
     public List<Rectangle> getIntersectingTiles(Rectangle target) {
         intersections.Clear();

@@ -4,6 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Idle.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroIdle_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroJump_SpriteList.png</File>
@@ -12,6 +13,7 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/TextureAtlas/ALL_content.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

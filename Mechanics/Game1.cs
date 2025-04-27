@@ -14,7 +14,7 @@ public class Game1 : Game
     private Player _player;
     private Vector2 _playerPosition;
     
-    private Texture2D testTexture;
+    public Texture2D debugTexture;
     private Rectangle _whiteSquare;
     private double testTime;
     
@@ -22,6 +22,7 @@ public class Game1 : Game
     private LoadMap _mapCollisions;
     
     private List<Rectangle> intersections;
+    private EnemyManager enemyManager;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -45,13 +46,18 @@ public class Game1 : Game
         _playerPosition = new Vector2(100, 100);
         _player = new Player(_playerPosition, true, Content, GraphicsDevice);
         
-        testTexture = new Texture2D(GraphicsDevice, 1, 1);
-        testTexture.SetData(new[] { Color.White });
+        debugTexture = new Texture2D(GraphicsDevice, 1, 1);
+        debugTexture.SetData(new[] { Color.White });
         
         _map = new LoadMap("../../../Maps/level2_face.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
         _map.LoadMapp("../../../Maps/level2_face.csv");
         _mapCollisions = new LoadMap("../../../Maps/level2_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
         _mapCollisions.LoadMapp("../../../Maps/level2_collision.csv");
+        
+        enemyManager = new EnemyManager();
+        var Skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(50, 50));
+        
+        enemyManager.AddEnemy(Skeleton);
     }
 
     protected override void Update(GameTime gameTime)
@@ -63,6 +69,7 @@ public class Game1 : Game
         _player.ProcessMovement(gameTime);
         _player.Update(gameTime);
         _mapCollisions.Update(_player);
+        enemyManager.Update(gameTime);
         // TODO: Add your update logic here
         //Console.WriteLine(_player._velocity);
         
@@ -92,7 +99,8 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _player.Draw(_spriteBatch);
-        _spriteBatch.Draw(testTexture, _whiteSquare, Color.White);
+        enemyManager.Draw(_spriteBatch);
+        _spriteBatch.Draw(debugTexture, _whiteSquare, Color.White);
         _map.Draw(_spriteBatch);
         _spriteBatch.End();
         

@@ -31,3 +31,4 @@ C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\Hero
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroRunning_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroFalling_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroJumpV2_SpriteList.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_Idle.xnb
