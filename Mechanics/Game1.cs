@@ -11,7 +11,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     
-    private Player _player;
+    public Player _player;
     private Vector2 _playerPosition;
     
     public Texture2D debugTexture;
@@ -23,6 +23,8 @@ public class Game1 : Game
     
     private List<Rectangle> intersections;
     private EnemyManager enemyManager;
+    private Skeleton _skeleton;
+    private Skeleton _skeleton1;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -55,12 +57,13 @@ public class Game1 : Game
         _mapCollisions.LoadMapp("../../../Maps/level2_collision.csv");
         
         enemyManager = new EnemyManager();
-        var Skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(50, 50));
-        
-        enemyManager.AddEnemy(Skeleton);
+        _skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(250, 170), _player);
+        //_skeleton1 = new Skeleton(Content, GraphicsDevice, new Vector2(350, 370), _player);
+        enemyManager.AddEnemy(_skeleton);
+        //enemyManager.AddEnemy(_skeleton1);
     }
 
-    protected override void Update(GameTime gameTime)
+    protected override void Update(GameTime gameTime) 
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -69,6 +72,8 @@ public class Game1 : Game
         _player.ProcessMovement(gameTime);
         _player.Update(gameTime);
         _mapCollisions.Update(_player);
+        _mapCollisions.Update(_skeleton);
+        //_mapCollisions.Update(_skeleton1);
         enemyManager.Update(gameTime);
         // TODO: Add your update logic here
         //Console.WriteLine(_player._velocity);
@@ -89,7 +94,6 @@ public class Game1 : Game
         {
             Console.WriteLine("You hit the wall");
         }
-        
         base.Update(gameTime);
     }
 

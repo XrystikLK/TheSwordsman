@@ -13,8 +13,10 @@ public class AnimatedTexture
     private int frame;
     private float totalElapsed;
     private bool isPaused;
+    private bool isHidden;
     public float Rotation, Scale, Depth;
     public Vector2 Origin;
+    private bool _animationCompleted = false;
 
     /// <summary>
     /// Инициализирует новый экземпляр анимированной текстуры
@@ -56,11 +58,22 @@ public class AnimatedTexture
     {
         if (isPaused)
             return;
+        
+        // Сбрасываем флаг завершения перед обновлением
+        _animationCompleted = false;
+    
         totalElapsed += elapsed;
         if (totalElapsed > timePerFrame)
         {
             frame++;
-            frame %= frameCount;
+        
+            // Проверяем, достигли ли конца анимации
+            if (frame >= frameCount)
+            {
+                frame = 0; // Сбрасываем на первый кадр
+                _animationCompleted = true; // Устанавливаем флаг завершения
+            }
+        
             totalElapsed -= timePerFrame;
         }
     }
@@ -83,6 +96,7 @@ public class AnimatedTexture
     /// <param name="screenPos">Позиция отрисовки на экране</param>
     public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos, bool isFlipped = false)
     {
+        if (isHidden) return;
         int frameWidth = myTexture.Width / frameCount;
         Rectangle sourceRect = new Rectangle(frameWidth * frame, 0, frameWidth, myTexture.Height);
         // Determine flip effect
@@ -119,7 +133,7 @@ public class AnimatedTexture
         Reset();
     }
     /// Возобновляет воспроизведение анимации
-    public void Play()
+    public void Play(bool loop = true)
     {
         isPaused = false;
     }
@@ -128,4 +142,20 @@ public class AnimatedTexture
     {
         isPaused = true;
     }
+    /// <summary>
+    /// Временно скрывает анимацию (не отрисовывает)
+    /// </summary>
+    public void Hide()
+    {
+        isHidden = true;
+    }
+
+    /// <summary>
+    /// Показывает анимацию (возвращает обычную отрисовку)
+    /// </summary>
+    public void Show()
+    {
+        isHidden = false;
+    }
+    public bool IsAnimationComplete => _animationCompleted;
 }

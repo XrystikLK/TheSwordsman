@@ -25,7 +25,7 @@ public class EnemyManager
             enemies[i].Update(gameTime);
 
             // Удаляем врагов с нулевым или отрицательным здоровьем
-            if (enemies[i].Health <= 0)
+            if (enemies[i].IsRemoved)
             {
                 enemies.RemoveAt(i);
             }

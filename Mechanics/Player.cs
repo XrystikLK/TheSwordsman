@@ -12,10 +12,14 @@ namespace SomeTest;
 /// </summary>
 public class Player
 {
+    public int health = 100;
+    public int damage = 25;
+    
     private AnimatedTexture _heroIdle;
     private AnimatedTexture _heroWalking;
     private AnimatedTexture _heroJump;
     private AnimatedTexture _heroFalling;
+    private AnimatedTexture _heroAttack;
     
     public Vector2 _position;
     public Rectangle _hitboxRect => new Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
@@ -28,7 +32,9 @@ public class Player
     // Физика и движение
     public Vector2 _velocity = Vector2.Zero;
     public bool IsGrounded = false;
-        
+    public bool isAttacking = false;
+    public Rectangle hitboxAttack;
+    private KeyboardState _previousKeyboardState;
     // Константы движения
     public const float MoveSpeed = 200f;
     public const float Gravity = 800f;
@@ -61,6 +67,9 @@ public class Player
         
         _heroFalling = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);
         _heroFalling.Load(content, "Hero/HeroFalling_SpriteList", 2, 4);
+        
+        _heroAttack = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);
+        _heroAttack.Load(content, "Hero/HeroAttack_SpriteList", 5, 12);
         
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
         _debugTexture.SetData(new[] { Color.White });
@@ -116,13 +125,30 @@ public class Player
         
         _position += _velocity * deltaTime;
         //Console.WriteLine(_velocity);
+
+        if (keyboardState.IsKeyDown(Keys.F) && !_previousKeyboardState.IsKeyDown(Keys.F))
+        {
+            isAttacking = true;
+        }
+        if (isAttacking)
+        {
+            _heroAttack.UpdateFrame(deltaTime);
+            if (_currentDirection == "Left")
+                hitboxAttack = new Rectangle(_hitboxRect.X - 25, _hitboxRect.Y, 25, _hitboxRect.Height);
+            else hitboxAttack = new Rectangle(_hitboxRect.X + _hitboxRect.Width, _hitboxRect.Y, 25, _hitboxRect.Height);
+            if (_heroAttack.IsAnimationComplete)
+            {
+                isAttacking = false;
+                hitboxAttack = new Rectangle(0, 0, 0, 0);
+            }
+        }
         
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
         // Ограничение движения по горизонтали
         if (_hitboxRect.X < 0) _position.X = -30;
         if (_hitboxRect.X + _hitboxRect.Width > _viewport.Width + 5) _position.X = _viewport.Width - 62;
-
+        _previousKeyboardState = keyboardState;
     }
 
     /// <summary>
@@ -133,6 +159,7 @@ public class Player
     {
         //Console.WriteLine(IsGrounded);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        
         if (_velocity.X != 0 && IsGrounded)
             _heroWalking.UpdateFrame(elapsed);
         if (_velocity.X == 0 && IsGrounded)
@@ -170,14 +197,22 @@ public class Player
         if (IsGrounded)
         {
             if (_velocity.X < 0)
-                _heroWalking.DrawFrame(spriteBatch, _position, true);
-            else if (_velocity.X > 0)
-                _heroWalking.DrawFrame(spriteBatch, _position);
-            
-            if (_velocity.X == 0 && _currentDirection == "Left")
-                _heroIdle.DrawFrame(spriteBatch, _position, true);
-            else if(_velocity.X == 0 && _currentDirection == "Right")
-                _heroIdle.DrawFrame(spriteBatch, _position);
+            {
+                if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position, true);
+                else _heroWalking.DrawFrame(spriteBatch, _position, true);
+            }
+           else if (_velocity.X > 0)
+           {
+               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
+               else _heroWalking.DrawFrame(spriteBatch, _position);
+           }
+               
+           if (_velocity.X == 0 && _currentDirection == "Left")
+               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position, true);
+               else _heroIdle.DrawFrame(spriteBatch, _position, true);
+           else if(_velocity.X == 0 && _currentDirection == "Right")
+               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
+               else _heroIdle.DrawFrame(spriteBatch, _position); 
         }
 
         if (_currentDirection == "Right")
@@ -210,8 +245,15 @@ public class Player
         //         _heroIdle.DrawFrame(spriteBatch, _position);
         //         break;
         // }
-            
-        if (isDebug) spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
+
+        if (isDebug)
+        {
+            spriteBatch.Draw(_debugTexture, _hitboxRect, Color.Red * 0.5f);
+            if (isAttacking && IsGrounded)
+            {
+                spriteBatch.Draw(_debugTexture, hitboxAttack, Color.Green * 0.5f);
+            }
+        }
     }
     
 }

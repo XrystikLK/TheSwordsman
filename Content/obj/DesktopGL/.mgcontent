@@ -4,7 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_01_White_Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroIdle_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroJump_SpriteList.png</File>
@@ -13,7 +16,10 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/TextureAtlas/ALL_content.png</File>
   </SourceFiles>
   <DestFiles>
-    <File>Enemy/Skeleton_Idle.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

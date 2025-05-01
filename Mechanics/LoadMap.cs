@@ -122,6 +122,84 @@ public class LoadMap
         }
                 
     }
+    
+    public void Update(Enemy enemy)
+    {
+        if (enemy == null)
+        {
+            Console.WriteLine("Enemy is NULL!");
+            return;
+        }
+        intersections = getIntersectingTiles(enemy.hitbox);
+        var allCollisions = new List<Rectangle>();
+        
+        foreach (var rect in intersections)
+        {
+            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
+            {
+                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
+                allCollisions.Add(collision);
+            }
+        }
+        var intersectionWithOX = allCollisions
+            .GroupBy(v => v.Y)                     
+            .Where(g => g.Count() > 1)            
+            .SelectMany(g => g)                    
+            .ToList();;
+        var intersectionWithOY = allCollisions
+            .Except(intersectionWithOX)                         
+            .ToList();
+        
+        if (allCollisions.Count == 0) enemy.isGrounded = false;
+        if (allCollisions.Count == 1)
+        {
+            var a = enemy.hitbox.Bottom;
+            var b = allCollisions.First().Top;
+            if (a < b + 5)
+            {
+                intersectionWithOX = allCollisions;
+                intersectionWithOY.Clear();
+            }
+            else
+            {
+                Console.WriteLine(enemy.hitbox.Bottom - allCollisions.First().Top);
+            }
+        }
+        
+        // Обработка столкновения по оси OY
+        if (intersectionWithOX.Count != 0)
+        {
+            var a = intersectionWithOX.First().Y;
+            var b = enemy.hitbox.Height;
+            Console.WriteLine(enemy.Position);
+            enemy.SetPositionY(intersectionWithOX.First().Y - enemy.hitbox.Height - _tileSize);
+            enemy.isGrounded = true;
+        }
+        //Иначе игрок должен падать 
+        else
+            enemy.isGrounded = false;
+        
+        // Обработка столкновения по оси OX
+        // if (intersectionWithOY.Count >= 1)
+        // {
+        //     if (enemy.isGrounded)
+        //     {
+        //         if (player._velocity.X > 0)
+        //             player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
+        //         else if (player._velocity.X < 0)
+        //             player._position.X = intersectionWithOX[0].X - _tileSize + 2;
+        //     }
+        //     // Обрабатывает столкновение игрока в воздухе
+        //     else
+        //     {
+        //         if (player._velocity.X > 0)
+        //             player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
+        //         else if (player._velocity.X < 0)
+        //             player._position.X = intersectionWithOY[0].X - _tileSize + 2;
+        //     }
+        // }
+                
+    }
     public List<Rectangle> getIntersectingTiles(Rectangle target) {
         intersections.Clear();
         

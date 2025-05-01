@@ -1,2 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_01_White_Idle.png","C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/bin/DesktopGL/Enemy/Skeleton_Idle.xnb","TextureProcessor","Texture2DContent",2603,196693,0,136573
+"C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_die.png","C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/bin/DesktopGL/Enemy/Skeleton_die.xnb","TextureProcessor","Texture2DContent",5276,319573,0,1778514
+"C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png","C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/bin/DesktopGL/Hero/HeroAttack_SpriteList.xnb","TextureProcessor","Texture2DContent",1671,37085,0,0047656
