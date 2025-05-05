@@ -35,3 +35,7 @@ C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Ske
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_attack.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Hero\HeroAttack_SpriteList.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_die.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_Walk.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_Hurt.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Fonts\Main.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\TextureAtlas\Dungeon.xnb

@@ -13,7 +13,7 @@ namespace SomeTest;
 public class Player
 {
     public int health = 100;
-    public int damage = 25;
+    public int damage = 250;
     
     private AnimatedTexture _heroIdle;
     private AnimatedTexture _heroWalking;
@@ -38,7 +38,7 @@ public class Player
     // Константы движения
     public const float MoveSpeed = 200f;
     public const float Gravity = 800f;
-    public const float JumpForce = -400f;
+    public const float JumpForce = -350f;
     public const float GroundDrag = 0.8f;
     public const float AirDrag = 0.95f;
 
@@ -111,7 +111,6 @@ public class Player
             _velocity.Y = JumpForce;
             IsGrounded = false;
         }
-
         // Применяем гравитацию, если не на земле
         if (!IsGrounded)
         {
@@ -146,8 +145,8 @@ public class Player
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
         // Ограничение движения по горизонтали
-        if (_hitboxRect.X < 0) _position.X = -30;
-        if (_hitboxRect.X + _hitboxRect.Width > _viewport.Width + 5) _position.X = _viewport.Width - 62;
+        // if (_hitboxRect.X < 0) _position.X = -30;
+        // if (_hitboxRect.X + _hitboxRect.Width > _viewport.Width + 5) _position.X = _viewport.Width - 62;
         _previousKeyboardState = keyboardState;
     }
 

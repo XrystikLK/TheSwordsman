@@ -80,7 +80,7 @@ public class LoadMap
         {
             var a = player._hitboxRect.Bottom;
             var b = allCollisions.First().Top;
-            if (a < b + 5)
+            if (a < b + 5 || player._hitboxRect.Top + 5 > allCollisions.First().Bottom)
             {
                 intersectionWithOX = allCollisions;
                 intersectionWithOY.Clear();
@@ -89,13 +89,27 @@ public class LoadMap
             {
                 Console.WriteLine(player._hitboxRect.Bottom - allCollisions.First().Top);
             }
-        } 
+        }
+        // Список столкновений игрока головой об текстуры
+        var headCollision = intersectionWithOX
+            .Where(collision => player._hitboxRect.Bottom + 5 > collision.Bottom)
+            .ToList();
         
+        //Console.WriteLine($"OX: {intersectionWithOX.Count}, OY: {intersectionWithOY.Count}, Head: {headCollision.Count}");
+        //foreach (var collision in intersectionWithOX) {Console.WriteLine(collision);}
         // Обработка столкновения по оси OY
         if (intersectionWithOX.Count != 0)
         {
-            player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
-            player.IsGrounded = true;
+            if (headCollision.Count != 0)
+            {
+                player._position.Y = headCollision.First().Bottom - 11;
+            }
+            else
+            {
+              player._position.Y = intersectionWithOX.First().Y - player._hitboxRect.Height - 10;
+              player.IsGrounded = true;  
+            }
+            
         }
         //Иначе игрок должен падать 
         else
@@ -160,10 +174,6 @@ public class LoadMap
                 intersectionWithOX = allCollisions;
                 intersectionWithOY.Clear();
             }
-            else
-            {
-                Console.WriteLine(enemy.hitbox.Bottom - allCollisions.First().Top);
-            }
         }
         
         // Обработка столкновения по оси OY
@@ -171,8 +181,8 @@ public class LoadMap
         {
             var a = intersectionWithOX.First().Y;
             var b = enemy.hitbox.Height;
-            Console.WriteLine(enemy.Position);
-            enemy.SetPositionY(intersectionWithOX.First().Y - enemy.hitbox.Height - _tileSize);
+            
+            enemy.SetPositionY(intersectionWithOX.First().Y - enemy.hitbox.Height - 5);
             enemy.isGrounded = true;
         }
         //Иначе игрок должен падать 
@@ -180,24 +190,26 @@ public class LoadMap
             enemy.isGrounded = false;
         
         // Обработка столкновения по оси OX
-        // if (intersectionWithOY.Count >= 1)
-        // {
-        //     if (enemy.isGrounded)
-        //     {
-        //         if (player._velocity.X > 0)
-        //             player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
-        //         else if (player._velocity.X < 0)
-        //             player._position.X = intersectionWithOX[0].X - _tileSize + 2;
-        //     }
-        //     // Обрабатывает столкновение игрока в воздухе
-        //     else
-        //     {
-        //         if (player._velocity.X > 0)
-        //             player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
-        //         else if (player._velocity.X < 0)
-        //             player._position.X = intersectionWithOY[0].X - _tileSize + 2;
-        //     }
-        // }
+        if (intersectionWithOY.Count >= 1)
+        {
+            enemy.isStack = true;
+            if (enemy.isGrounded)
+            {
+                if (enemy.velocity.X > 0)
+                    enemy.SetPositionX(intersectionWithOX.First().X - enemy.hitbox.Width + 17);
+                else if (enemy.velocity.X < 0)
+                    enemy.SetPositionX(intersectionWithOX[0].X - _tileSize + 2);
+            }
+            // Обрабатывает столкновение игрока в воздухе
+            else
+            {
+                if (enemy.velocity.X > 0)
+                    enemy.SetPositionX(intersectionWithOY.First().X - (enemy.hitbox.Width + 30));
+                else if (enemy.velocity.X < 0)
+                    enemy.SetPositionX(intersectionWithOY[0].X - _tileSize + 2);
+            }
+        }
+        else enemy.isStack = false;
                 
     }
     public List<Rectangle> getIntersectingTiles(Rectangle target) {

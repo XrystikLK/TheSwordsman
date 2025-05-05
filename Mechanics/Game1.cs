@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SomeTest.Maps;
 
 namespace SomeTest;
 
@@ -25,6 +26,9 @@ public class Game1 : Game
     private EnemyManager enemyManager;
     private Skeleton _skeleton;
     private Skeleton _skeleton1;
+
+    private SpriteFont _font;
+    private SceneManager sceneManager;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -32,6 +36,7 @@ public class Game1 : Game
         IsMouseVisible = true;
         _graphics.PreferredBackBufferWidth = 960;
         _graphics.PreferredBackBufferHeight = 640;
+        sceneManager = new SceneManager();
     }
 
     protected override void Initialize()
@@ -45,22 +50,26 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
+        _font = Content.Load<SpriteFont>("Fonts/Main");
+        
         _playerPosition = new Vector2(100, 100);
         _player = new Player(_playerPosition, true, Content, GraphicsDevice);
         
         debugTexture = new Texture2D(GraphicsDevice, 1, 1);
         debugTexture.SetData(new[] { Color.White });
         
-        _map = new LoadMap("../../../Maps/level2_face.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
-        _map.LoadMapp("../../../Maps/level2_face.csv");
-        _mapCollisions = new LoadMap("../../../Maps/level2_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
-        _mapCollisions.LoadMapp("../../../Maps/level2_collision.csv");
+        _map = new LoadMap("../../../Maps/Test_main.csv", "TextureAtlas/Dungeon", Content, GraphicsDevice, 16);
+        _map.LoadMapp("../../../Maps/Test_main.csv");
+        _mapCollisions = new LoadMap("../../../Maps/Test_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
+        _mapCollisions.LoadMapp("../../../Maps/Test_collision.csv");
         
         enemyManager = new EnemyManager();
-        _skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(250, 170), _player);
-        //_skeleton1 = new Skeleton(Content, GraphicsDevice, new Vector2(350, 370), _player);
+        _skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(125, 370), _player);
+        //_skeleton1 = new Skeleton(Content, GraphicsDevice, new Vector2(350, 170), _player);
         enemyManager.AddEnemy(_skeleton);
         //enemyManager.AddEnemy(_skeleton1);
+        
+        sceneManager.AddScene(new Level1(Content, sceneManager, _player));
     }
 
     protected override void Update(GameTime gameTime) 
@@ -73,8 +82,8 @@ public class Game1 : Game
         _player.Update(gameTime);
         _mapCollisions.Update(_player);
         _mapCollisions.Update(_skeleton);
-        //_mapCollisions.Update(_skeleton1);
         enemyManager.Update(gameTime);
+        sceneManager.GetCurrentScene().Update(gameTime);
         // TODO: Add your update logic here
         //Console.WriteLine(_player._velocity);
         
@@ -104,8 +113,10 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _player.Draw(_spriteBatch);
         enemyManager.Draw(_spriteBatch);
+        _spriteBatch.DrawString(_font, "Health:" + _player.health, new Vector2(435, 50), Color.Red);
         _spriteBatch.Draw(debugTexture, _whiteSquare, Color.White);
         _map.Draw(_spriteBatch);
+        sceneManager.GetCurrentScene().Draw(_spriteBatch);
         _spriteBatch.End();
         
         base.Draw(gameTime);

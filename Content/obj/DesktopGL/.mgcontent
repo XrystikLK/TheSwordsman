@@ -6,7 +6,10 @@
   <SourceFiles>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_attack.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Hurt.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Fonts/Main.spritefont</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroIdle_SpriteList.png</File>
@@ -14,8 +17,13 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroJumpV2_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroRunning_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/TextureAtlas/ALL_content.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/TextureAtlas/Dungeon.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

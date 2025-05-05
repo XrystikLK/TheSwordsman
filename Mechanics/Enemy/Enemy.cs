@@ -10,16 +10,21 @@ public abstract class Enemy
     protected Vector2 position;
     protected int health;
     protected int damage;
-    protected bool isFlipped;
     public bool isGrounded = false; 
     public Rectangle hitbox;
     public Vector2 velocity;
+    public bool isStack = false;
     protected Dictionary<string, AnimatedTexture> animations;
     protected string currentAnimation;
-    private float _lastDamageTime;
+    private float _lastDamageTimeEnemy;
+    private float _lastDamageTimeHero;
     private const float DamageCooldown = 1.0f;
     protected bool isDying = false;
     protected bool isRemoved = false;
+    public bool playerIsRight;
+    public string _previousAnimation;
+    private Vector2 knockbackVelocity;
+    
     public bool IsRemoved => isRemoved;
 
     public Enemy(Vector2 startPosition, int health, int damage, GraphicsDevice graphicsDevice, Player player)
@@ -28,56 +33,85 @@ public abstract class Enemy
         this.health = health;
         this.damage = damage;
         this.animations = new Dictionary<string, AnimatedTexture>();
-        this.currentAnimation = "Idle"; // По умолчанию
+        this.currentAnimation = "Idle";
         this._player = player;
+        knockbackVelocity = new Vector2(300f, 200f);
     }
 
     public virtual void Update(GameTime gameTime)
     {
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        float total = (float)gameTime.TotalGameTime.TotalSeconds;
-
+        float total = (float)gameTime.TotalGameTime.TotalSeconds; 
+        playerIsRight = _player._position.X > position.X;
         // 1) Если в процессе “умирания” — обновляем только Die-анимацию
         if (isDying)
         {
             var dieAnim = animations[currentAnimation];
             dieAnim.UpdateFrame(elapsed);
-
-            // Предполагаем, что AnimatedTexture имеет свойство IsFinished
+            
             if (dieAnim.IsAnimationComplete)
                 isRemoved = true;
                 //hitbox = new Rectangle(0, 0, 0, 0);
-
-            // не выполняем никакой другой логики
+                
             return;
         }
 
+        //Console.WriteLine($"Current animation: {currentAnimation}\nPrevious animation: {_previousAnimation}");
         // 2) Обычное обновление анимации
         if (animations.ContainsKey(currentAnimation))
-            animations[currentAnimation].UpdateFrame(elapsed);
-
-        // 3) Логика столкновений и урона
-        if (_player._hitboxRect.Intersects(hitbox))
-            Console.WriteLine("Enemy hit player");
-
-        if (_player.hitboxAttack.Intersects(hitbox) 
-            && total - _lastDamageTime >= DamageCooldown)
         {
-            _lastDamageTime = total;
-            TakeDamage(_player.damage);
+            if (currentAnimation == "Attack" && _previousAnimation != "Attack") animations["Attack"].Reset();
+            if (currentAnimation == "Hurt" && _previousAnimation != "Hurt") animations["Hurt"].Reset();
+            
+            // Добавить переменную "предыдущая анимация"
+            // if (currentAnimation == "Attack")
+            // {
+            //     while (animations["Attack"].IsAnimationComplete != true)
+            //     {
+            //         animations["Attack"].UpdateFrame(elapsed);
+            //     }
+            // }
+            animations[currentAnimation].UpdateFrame(elapsed);
         }
+
+        if (_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox))
+        {
+            velocity.X = 0;
+            // 4) Логика нанесения урона монстру
+            if (_player.hitboxAttack.Intersects(hitbox)) 
+            {
+                // Возможно сделать систему отталкивания, но пока так
+                if (total - _lastDamageTimeEnemy >= DamageCooldown)
+                {
+                    //Console.WriteLine("Enemy get damage ");
+                    _lastDamageTimeEnemy = total;
+                    TakeDamage(_player.damage);
+                }
+            }
+            // 3) Логика столкновений и урона
+            if (_player._hitboxRect.Intersects(hitbox))
+            {
+                if (total - _lastDamageTimeHero >= DamageCooldown)
+                {
+                    _lastDamageTimeHero = total;
+                    _player.health -= damage;
+                    //Нужно сделать чтобы игрока отталкивало назад при столкновении
+                    //Console.WriteLine("Enemy hit player");
+                }
+            
+            }
+        }
+        else velocity.X = 100f;
     }
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        float distanceToPlayer = Vector2.Distance(new Vector2(hitbox.X, Hitbox.Y), new Vector2(_player._position.X, _player._position.Y));
         //Console.WriteLine(distanceToPlayer - hitbox.Width);
-        
         if (animations.ContainsKey(currentAnimation))
         {
-            animations[currentAnimation].DrawFrame(spriteBatch, position, isFlipped);
+            if (playerIsRight) animations[currentAnimation].DrawFrame(spriteBatch, position);
+            else animations[currentAnimation].DrawFrame(spriteBatch, position, true);
         }
-        
     }
 
     public void TakeDamage(int amount)
@@ -107,6 +141,25 @@ public abstract class Enemy
         position.Y = newY;
     }
 
+    public void Chase()
+    {
+        if (isDying) return;
+        // float distanceToPlayer = Vector2.Distance(new Vector2(hitbox.X, Hitbox.Y), new Vector2(_player._position.X, _player._position.Y));
+        // Console.WriteLine(distanceToPlayer);
+        
+        velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
+    }
+
+    public void Jumping()
+    {
+        if (isDying) return;
+        if (isGrounded && isStack)
+        {
+            const float jumpForce = -400f;
+            velocity.Y = jumpForce;
+            isGrounded = false;
+        }
+    }
     public void SetPositionX(float newX)
     {
         position.X = newX;
