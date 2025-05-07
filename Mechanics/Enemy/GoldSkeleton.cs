@@ -4,27 +4,27 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SomeTest;
 
-public class Skeleton : Enemy
+public class GoldSkeleton : Enemy
 {
     private float gravity = 800f;
     private Texture2D debugTexture;
-    public Skeleton(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 75, damage: 10, graphicsDevice, player)
+    public GoldSkeleton(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
+        : base(startPosition, health: 150, damage: 10, graphicsDevice, player)
     {
         var idleAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        idleAnimation.Load(content, "Enemy/WhiteSkeleton/Idle", frameCount: 8, framesPerSec: 9);
+        idleAnimation.Load(content, "Enemy/GoldSkeleton/Idle", frameCount: 8, framesPerSec: 9);
         
         var attackAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        attackAnimation.Load(content, "Enemy/WhiteSkeleton/Attack", frameCount: 10, framesPerSec: 10);
+        attackAnimation.Load(content, "Enemy/GoldSkeleton/Attack", frameCount: 10, framesPerSec: 10);
         
         var dieAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        dieAnimation.Load(content, "Enemy/WhiteSkeleton/Die", frameCount: 13, framesPerSec: 13);
+        dieAnimation.Load(content, "Enemy/GoldSkeleton/Die", frameCount: 13, framesPerSec: 13);
         
         var walkingAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        walkingAnimation.Load(content, "Enemy/WhiteSkeleton/Walk", frameCount: 10, framesPerSec: 12);
+        walkingAnimation.Load(content, "Enemy/GoldSkeleton/Walk", frameCount: 10, framesPerSec: 12);
         
         var hurtAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        hurtAnimation.Load(content, "Enemy/WhiteSkeleton/Hurt", frameCount: 5, framesPerSec: 10);
+        hurtAnimation.Load(content, "Enemy/GoldSkeleton/Hurt", frameCount: 5, framesPerSec: 10);
         
         animations.Add("Idle", idleAnimation);
         animations.Add("Attack", attackAnimation);
@@ -75,6 +75,6 @@ public class Skeleton : Enemy
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
-        //spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
+        spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
     }
 }

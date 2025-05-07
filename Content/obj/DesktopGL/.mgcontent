@@ -4,11 +4,16 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_attack.png</File>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_die.png</File>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Hurt.png</File>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Idle.png</File>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Skeleton_Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/../../../../Desktop/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Hurt.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Hurt.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Fonts/Main.spritefont</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
@@ -20,6 +25,11 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/TextureAtlas/Dungeon.png</File>
   </SourceFiles>
   <DestFiles>
+    <File>Enemy/WhiteSkeleton/Idle.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

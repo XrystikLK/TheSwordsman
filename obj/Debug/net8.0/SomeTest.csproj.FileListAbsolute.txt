@@ -39,3 +39,13 @@ C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Ske
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\Skeleton_Hurt.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Fonts\Main.xnb
 C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\TextureAtlas\Dungeon.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\WhiteSkeleton\Attack.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\WhiteSkeleton\Die.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\WhiteSkeleton\Hurt.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\WhiteSkeleton\Walk.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\GoldSkeleton\Attack.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\GoldSkeleton\Die.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\GoldSkeleton\Hurt.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\GoldSkeleton\Idle.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\GoldSkeleton\Walk.xnb
+C:\Users\ilya\RiderProjects\SomeTest\SomeTest\bin\Debug\net8.0\Content\Enemy\WhiteSkeleton\Idle.xnb

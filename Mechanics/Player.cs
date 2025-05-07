@@ -13,7 +13,7 @@ namespace SomeTest;
 public class Player
 {
     public int health = 100;
-    public int damage = 250;
+    public int damage = 2;
     
     private AnimatedTexture _heroIdle;
     private AnimatedTexture _heroWalking;
@@ -22,7 +22,7 @@ public class Player
     private AnimatedTexture _heroAttack;
     
     public Vector2 _position;
-    public Rectangle _hitboxRect => new Rectangle((int)_position.X + 30, (int)_position.Y + 10, 37, 62);
+    public Rectangle _hitboxRect => new Rectangle((int)_position.X + 25, (int)_position.Y + 10, 25, 45);
     public bool isDebug;
     
     private string _currentDirection;
@@ -37,7 +37,7 @@ public class Player
     private KeyboardState _previousKeyboardState;
     // Константы движения
     public const float MoveSpeed = 200f;
-    public const float Gravity = 800f;
+    public const float Gravity = 700f;
     public const float JumpForce = -350f;
     public const float GroundDrag = 0.8f;
     public const float AirDrag = 0.95f;
@@ -56,19 +56,19 @@ public class Player
         this._currentDirection = "Right";
         _viewport = graphicsDevice.Viewport;
             
-        _heroIdle = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
+        _heroIdle = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
         _heroIdle.Load(content, "Hero/HeroIdle_SpriteList", 4, 6);
         
-        _heroWalking = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
+        _heroWalking = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
         _heroWalking.Load(content, "Hero/HeroRunning_SpriteList", 6, 8);
         
-        _heroJump = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);;
+        _heroJump = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
         _heroJump.Load(content, "Hero/HeroJumpV2_SpriteList", 7, 8);
         
-        _heroFalling = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);
+        _heroFalling = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroFalling.Load(content, "Hero/HeroFalling_SpriteList", 2, 4);
         
-        _heroAttack = new AnimatedTexture(Vector2.Zero, 0, 2f, 0.5f);
+        _heroAttack = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroAttack.Load(content, "Hero/HeroAttack_SpriteList", 5, 12);
         
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
@@ -133,8 +133,8 @@ public class Player
         {
             _heroAttack.UpdateFrame(deltaTime);
             if (_currentDirection == "Left")
-                hitboxAttack = new Rectangle(_hitboxRect.X - 25, _hitboxRect.Y, 25, _hitboxRect.Height);
-            else hitboxAttack = new Rectangle(_hitboxRect.X + _hitboxRect.Width, _hitboxRect.Y, 25, _hitboxRect.Height);
+                hitboxAttack = new Rectangle(_hitboxRect.X - 20, _hitboxRect.Y, 20, _hitboxRect.Height);
+            else hitboxAttack = new Rectangle(_hitboxRect.X + _hitboxRect.Width, _hitboxRect.Y, 20, _hitboxRect.Height);
             if (_heroAttack.IsAnimationComplete)
             {
                 isAttacking = false;

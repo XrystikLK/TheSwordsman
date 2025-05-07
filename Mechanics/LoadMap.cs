@@ -56,6 +56,7 @@ public class LoadMap
 
     public void Update(Player player)
     {
+        if (map == null) return;
         intersections = getIntersectingTiles(player._hitboxRect);
         var allCollisions = new List<Rectangle>();
         foreach (var rect in intersections)
@@ -121,17 +122,17 @@ public class LoadMap
             if (player.IsGrounded)
             {
                 if (player._velocity.X > 0)
-                    player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 17;
+                    player._position.X = intersectionWithOX.First().X - player._hitboxRect.Width + 7;
                 else if (player._velocity.X < 0)
-                    player._position.X = intersectionWithOX[0].X - _tileSize + 2;
+                    player._position.X = intersectionWithOX[0].X - _tileSize + 7;
             }
             // Обрабатывает столкновение игрока в воздухе
             else
             {
                 if (player._velocity.X > 0)
-                    player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 30);
+                    player._position.X = intersectionWithOY.First().X - (player._hitboxRect.Width + 25);
                 else if (player._velocity.X < 0)
-                    player._position.X = intersectionWithOY[0].X - _tileSize + 2;
+                    player._position.X = intersectionWithOY[0].X - _tileSize + 7;
             }
         }
                 
@@ -139,11 +140,7 @@ public class LoadMap
     
     public void Update(Enemy enemy)
     {
-        if (enemy == null)
-        {
-            Console.WriteLine("Enemy is NULL!");
-            return;
-        }
+        if (map == null) return;
         intersections = getIntersectingTiles(enemy.hitbox);
         var allCollisions = new List<Rectangle>();
         
@@ -233,8 +230,9 @@ public class LoadMap
     
     public void Draw(SpriteBatch spriteBatch)
     {
+        if ( map== null ) return;
         int display_tilesize = _tileSize;
-        int num_tiles_per_row = 9;
+        int num_tiles_per_row = 15;
         int pixel_tilesize = 16;
         
         foreach (var item in map)
@@ -255,5 +253,12 @@ public class LoadMap
         {
             spriteBatch.Draw(TestTexture, new Rectangle(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize), Color.Red * 0.5f);
         }
+    }
+    public void ClearMap()
+    {
+        // Удаляем все тайлы из словаря
+        map = null;
+        // Сбрасываем список пересечений
+        intersections = null;
     }
 }
