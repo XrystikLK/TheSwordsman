@@ -5,6 +5,23 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/../../../../Desktop/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Arrow.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Hurt.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Hurt.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Death/Attack.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Death/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Death/Hurt.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Death/Walk_Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/FireSpirit/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/FireSpirit/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Attack.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Die.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/GoldSkeleton/Hurt.png</File>
@@ -16,7 +33,9 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Fonts/Main.spritefont</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroDie_SpriteListpng.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroHurt_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroIdle_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroJump_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroJumpV2_SpriteList.png</File>
@@ -26,6 +45,25 @@
   </SourceFiles>
   <DestFiles>
     <File>Enemy/WhiteSkeleton/Idle.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

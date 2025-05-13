@@ -16,14 +16,17 @@ public abstract class Enemy
     public bool isStack = false;
     protected Dictionary<string, AnimatedTexture> animations;
     protected string currentAnimation;
-    private float _lastDamageTimeEnemy;
-    private float _lastDamageTimeHero;
-    private const float DamageCooldown = 1.0f;
+    public float _lastDamageTimeEnemy;
+    public float _lastDamageTimeHero;
+    public const float DamageCooldown = 1.0f;
     protected bool isDying = false;
     protected bool isRemoved = false;
     public bool playerIsRight;
+    public bool playerIsBottom;
     public string _previousAnimation;
     private Vector2 knockbackVelocity;
+    public bool isHurting = false;
+    public Vector2 originalVelocity;
     
     public bool IsRemoved => isRemoved;
 
@@ -43,38 +46,51 @@ public abstract class Enemy
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
         playerIsRight = _player._position.X > position.X;
+        playerIsBottom = _player._hitboxRect.Center.Y < position.Y;
         // 1) Если в процессе “умирания” — обновляем только Die-анимацию
         if (isDying)
         {
-            var dieAnim = animations[currentAnimation];
+            var dieAnim = animations["Die"];
             dieAnim.UpdateFrame(elapsed);
-            
+        
             if (dieAnim.IsAnimationComplete)
                 isRemoved = true;
-                //hitbox = new Rectangle(0, 0, 0, 0);
-                
+            //hitbox = new Rectangle(0, 0, 0, 0);
+            
             return;
         }
-
-        //Console.WriteLine($"Current animation: {currentAnimation}\nPrevious animation: {_previousAnimation}");
+        
         // 2) Обычное обновление анимации
         if (animations.ContainsKey(currentAnimation))
         {
             if (currentAnimation == "Attack" && _previousAnimation != "Attack") animations["Attack"].Reset();
             if (currentAnimation == "Hurt" && _previousAnimation != "Hurt") animations["Hurt"].Reset();
-            
-            // Добавить переменную "предыдущая анимация"
-            // if (currentAnimation == "Attack")
-            // {
-            //     while (animations["Attack"].IsAnimationComplete != true)
-            //     {
-            //         animations["Attack"].UpdateFrame(elapsed);
-            //     }
-            // }
             animations[currentAnimation].UpdateFrame(elapsed);
         }
+        
+        // Наверное нужно будет это прописывать во всех классах
+        
+    }
 
-        if (_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox))
+    public virtual void Draw(SpriteBatch spriteBatch)
+    {
+        //Console.WriteLine(distanceToPlayer - hitbox.Width);
+        if (animations.ContainsKey(currentAnimation))
+        {
+            if (playerIsRight) animations[currentAnimation].DrawFrame(spriteBatch, position);
+            else animations[currentAnimation].DrawFrame(spriteBatch, position, true);
+        }
+    }
+
+    
+    /// <summary>
+    /// Логика взаимодействия игрока и моба
+    /// </summary>
+    /// <param name="gameTime">Игрвое время</param>
+    public void MeleeInteractionLogic(GameTime gameTime)
+    {
+        float total = (float)gameTime.TotalGameTime.TotalSeconds; 
+        if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting))
         {
             velocity.X = 0;
             // 4) Логика нанесения урона монстру
@@ -94,24 +110,14 @@ public abstract class Enemy
                 if (total - _lastDamageTimeHero >= DamageCooldown)
                 {
                     _lastDamageTimeHero = total;
-                    _player.health -= damage;
+                    _player.TakeDamage(damage);
                     //Нужно сделать чтобы игрока отталкивало назад при столкновении
                     //Console.WriteLine("Enemy hit player");
                 }
             
             }
         }
-        else velocity.X = 100f;
-    }
-
-    public virtual void Draw(SpriteBatch spriteBatch)
-    {
-        //Console.WriteLine(distanceToPlayer - hitbox.Width);
-        if (animations.ContainsKey(currentAnimation))
-        {
-            if (playerIsRight) animations[currentAnimation].DrawFrame(spriteBatch, position);
-            else animations[currentAnimation].DrawFrame(spriteBatch, position, true);
-        }
+        else velocity.X = originalVelocity.X;
     }
 
     public void TakeDamage(int amount)
@@ -130,6 +136,7 @@ public abstract class Enemy
         isDying = true;
         velocity = Vector2.Zero;
     }
+    
     
     public void SetPosition(Vector2 newPosition)
     {
@@ -150,12 +157,27 @@ public abstract class Enemy
         velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
     }
 
+    public void Archer()
+    {
+        if (isDying) return;
+        var distanceToPlayer = Vector2.Distance(_player._position, position);
+        velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
+        Console.WriteLine(distanceToPlayer);
+    }
+        
+
+    public void FlyChase()
+    {
+        if (isDying) return;
+        velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
+        velocity.Y = playerIsBottom ? -Math.Abs(velocity.Y) : Math.Abs(velocity.Y);
+    }
     public void Jumping()
     {
         if (isDying) return;
         if (isGrounded && isStack)
         {
-            const float jumpForce = -400f;
+            const float jumpForce = -200f;
             velocity.Y = jumpForce;
             isGrounded = false;
         }

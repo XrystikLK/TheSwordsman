@@ -64,10 +64,10 @@ public class Game1 : Game
         _mapCollisions = new LoadMap("../../../Maps/level2_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
         _mapCollisions.LoadMapp("../../../Maps/level2_collision.csv");
         
-        //enemyManager = new EnemyManager(); //
-        //_skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(125, 370), _player); //
+        enemyManager = new EnemyManager(); //
+        _skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(125, 370), _player); //
         //_skeleton1 = new Skeleton(Content, GraphicsDevice, new Vector2(350, 170), _player);
-        //enemyManager.AddEnemy(_skeleton); // 
+        enemyManager.AddEnemy(_skeleton); // 
         //enemyManager.AddEnemy(_skeleton1);
         
         //sceneManager.AddScene(new Level2(Content, sceneManager, GraphicsDevice, _player));
@@ -86,7 +86,7 @@ public class Game1 : Game
             _mapCollisions.Update(_player);
         }
         
-        //enemyManager.Update(gameTime); // 
+        enemyManager.Update(gameTime); // 
         if (_player._hitboxRect.X + _player._hitboxRect.Width > 975)
         {
             if (!isNextScene)
@@ -114,14 +114,13 @@ public class Game1 : Game
         //     testTime = 0;
         // }
         
-        
+        //_mapCollisions.Update(_skeleton);
         if (_player._hitboxRect.Intersects(_whiteSquare))
         {
             Console.WriteLine("You hit the wall");
         }
         base.Update(gameTime);
     }
-
     protected override void Draw(GameTime gameTime)
     {
         // TODO: Add your drawing code here
@@ -129,6 +128,7 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         if (isNextScene) sceneManager.GetCurrentScene().Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
+        enemyManager.Draw(_spriteBatch);
         _spriteBatch.DrawString(_font, "Health:" + _player.health, new Vector2(435, 50), Color.Red);
         //_spriteBatch.Draw(debugTexture, _whiteSquare, Color.White);
         _map?.Draw(_spriteBatch);

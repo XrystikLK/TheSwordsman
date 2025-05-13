@@ -13,13 +13,15 @@ namespace SomeTest;
 public class Player
 {
     public int health = 100;
-    public int damage = 2;
+    public int damage = 25;
     
     private AnimatedTexture _heroIdle;
     private AnimatedTexture _heroWalking;
     private AnimatedTexture _heroJump;
     private AnimatedTexture _heroFalling;
     private AnimatedTexture _heroAttack;
+    private AnimatedTexture _heroHurt;
+    private AnimatedTexture _heroDie;
     
     public Vector2 _position;
     public Rectangle _hitboxRect => new Rectangle((int)_position.X + 25, (int)_position.Y + 10, 25, 45);
@@ -33,6 +35,7 @@ public class Player
     public Vector2 _velocity = Vector2.Zero;
     public bool IsGrounded = false;
     public bool isAttacking = false;
+    public bool isHurt = false;
     public Rectangle hitboxAttack;
     private KeyboardState _previousKeyboardState;
     // Константы движения
@@ -70,6 +73,12 @@ public class Player
         
         _heroAttack = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroAttack.Load(content, "Hero/HeroAttack_SpriteList", 5, 12);
+        
+        _heroHurt = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
+        _heroHurt.Load(content, "Hero/HeroHurt_SpriteList", 3, 9);
+        
+        _heroDie = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
+        _heroDie.Load(content, "Hero/HeroDie_SpriteListpng", 7, 9);
         
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
         _debugTexture.SetData(new[] { Color.White });
@@ -158,6 +167,12 @@ public class Player
     {
         //Console.WriteLine(IsGrounded);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (health <= 0)
+        {
+            _heroDie.UpdateFrame(elapsed);
+            return;
+        }
         
         if (_velocity.X != 0 && IsGrounded)
             _heroWalking.UpdateFrame(elapsed);
@@ -167,6 +182,17 @@ public class Player
             _heroJump.UpdateFrame(elapsed);
         if (_velocity.Y > 1)
             _heroFalling.UpdateFrame(elapsed);
+        if (isHurt)
+        {
+            _heroHurt.UpdateFrame(elapsed);
+            if (_heroHurt.IsAnimationComplete)
+            {
+                isHurt = false;
+            }
+            return; // Не обновляем другие анимации, пока играет анимация получения урона
+        }
+
+        
         
         // switch (_currentDirection)
         // {
@@ -188,11 +214,31 @@ public class Player
     }
     
     /// <summary>
+    /// Метод для получения урона
+    /// </summary>
+    /// <param name="damage">Наносимый урон</param>
+    public void TakeDamage(int damage)
+    {
+        isHurt = true;
+        health -= damage;
+    }
+    
+    /// <summary>
     /// Отрисовывает персонажа и его хитбокс(при включенной debug режиме)
     /// </summary>
     /// <param name="spriteBatch">Объект для отрисовки спрайтов</param>
     public void Draw(SpriteBatch spriteBatch)
     {
+        if (health <= 0)
+        {
+            _heroDie.DrawFrame(spriteBatch, _position, _currentDirection == "Left");
+            return;
+        }
+        if (isHurt)
+        {
+            _heroHurt.DrawFrame(spriteBatch, _position, _currentDirection == "Left");
+            return;
+        }
         if (IsGrounded)
         {
             if (_velocity.X < 0)

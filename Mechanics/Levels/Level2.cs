@@ -16,7 +16,10 @@ public class Level2 : IScene
     private EnemyManager enemyManager;
     private Skeleton _skeleton;
     private GoldSkeleton _goldSkeleton;
-
+    private FireSpirit _fireSpirit;
+    private ArcaneArcher _arcaneArcher;
+    private Death _death;
+    
     private LoadMap mapFg;
     private LoadMap mapMg;
     private LoadMap mapCollision;
@@ -42,10 +45,16 @@ public class Level2 : IScene
         mapCollision.LoadMapp("../../../Maps/Level2/level2_collision.csv");
         
         enemyManager = new EnemyManager();
-        _skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(50, 450), player);
+        //_skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(50, 450), player);
         //_goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(150, 450), player);
-        enemyManager.AddEnemy(_skeleton);
+        _fireSpirit = new FireSpirit(contentManager, graphicsDevice, new Vector2(200, 50), player);
+        _arcaneArcher = new ArcaneArcher(contentManager, graphicsDevice, new Vector2(250, 450), player);
+        _death = new Death(contentManager, graphicsDevice, new Vector2(50, 450), player);
+        //enemyManager.AddEnemy(_skeleton);
         //enemyManager.AddEnemy(_goldSkeleton);
+        enemyManager.AddEnemy(_fireSpirit);
+        enemyManager.AddEnemy(_arcaneArcher);
+        enemyManager.AddEnemy(_death);
         player._position = new Vector2(450, 0);
     }
 
@@ -55,13 +64,15 @@ public class Level2 : IScene
         var b = player._hitboxRect.Width;
         if (player._hitboxRect.X + player._hitboxRect.Width > 900)
         {
-            //sceneManager.AddScene(new Level2(contentManager, sceneManager, player));
+            sceneManager.AddScene(new Level3(contentManager, sceneManager, graphicsDevice, player));
         }
         mapCollision.Update(player);
-        mapCollision.Update(_skeleton);
+        //mapCollision.Update(_skeleton);
         //mapCollision.Update(_goldSkeleton);
+        //mapCollision.Update(_fireSpirit);
+        mapCollision.Update(_death);
+        mapCollision.Update(_arcaneArcher);
         enemyManager.Update(gameTime);
-        Console.WriteLine(player._position);
     }
 
     public void Draw(SpriteBatch spriteBatch)

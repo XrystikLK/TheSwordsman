@@ -9,13 +9,13 @@ public class Skeleton : Enemy
     private float gravity = 800f;
     private Texture2D debugTexture;
     public Skeleton(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 75, damage: 10, graphicsDevice, player)
+        : base(startPosition, health: 25, damage: 10, graphicsDevice, player)
     {
         var idleAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
         idleAnimation.Load(content, "Enemy/WhiteSkeleton/Idle", frameCount: 8, framesPerSec: 9);
         
         var attackAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        attackAnimation.Load(content, "Enemy/WhiteSkeleton/Attack", frameCount: 10, framesPerSec: 10);
+        attackAnimation.Load(content, "Enemy/WhiteSkeleton/Attack", frameCount: 10, framesPerSec: 14);
         
         var dieAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
         dieAnimation.Load(content, "Enemy/WhiteSkeleton/Die", frameCount: 13, framesPerSec: 13);
@@ -36,7 +36,7 @@ public class Skeleton : Enemy
         debugTexture.SetData(new[] { Color.White });
         hitbox = new Rectangle((int)position.X, (int)position.Y, 35, 58);
         velocity = new Vector2(100f, 0);
-
+        originalVelocity = velocity;
         _previousAnimation = "Idle";
     }
 
@@ -46,6 +46,7 @@ public class Skeleton : Enemy
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         Chase();
         Jumping();
+        MeleeInteractionLogic(gameTime);
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
         {
@@ -56,25 +57,27 @@ public class Skeleton : Enemy
         position += velocity * deltaTime;
         hitbox.X = (int)(position.X) + 30;
         hitbox.Y = (int)(position.Y);
-        if (velocity.X !=  0) currentAnimation = "Walk";
-        if (_player._hitboxRect.Intersects(hitbox) && !isDying) currentAnimation = "Attack";
-        if (_player.hitboxAttack.Intersects(hitbox) && !isDying) currentAnimation = "Hurt";
+        if (_player.hitboxAttack.Intersects(hitbox) && !isDying && _player.isAttacking)
+        {
+            isHurting = true;
+        }
+        if (isHurting)
+        {
+            currentAnimation = "Hurt";
+            if (animations["Hurt"].IsAnimationComplete) isHurting = false;
+        }
+        else if (_player._hitboxRect.Intersects(hitbox) && !isDying) currentAnimation = "Attack";
+        
+        else if (velocity.X !=  0) currentAnimation = "Walk";
+        
         if (health <= 0){
             currentAnimation = "Die";
             //gravity = 0;
         };
-
-        // Меняем анимацию в зависимости от скорости
-        // if (speed > 0)
-        //     currentAnimation = "Run";
-        // else
-        //     currentAnimation = "Idle";
-        //
-        // position.X += speed;
     }
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
-        //spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
+        spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
     }
 }

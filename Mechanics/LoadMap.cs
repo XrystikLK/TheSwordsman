@@ -86,16 +86,12 @@ public class LoadMap
                 intersectionWithOX = allCollisions;
                 intersectionWithOY.Clear();
             }
-            else
-            {
-                Console.WriteLine(player._hitboxRect.Bottom - allCollisions.First().Top);
-            }
         }
         // Список столкновений игрока головой об текстуры
         var headCollision = intersectionWithOX
             .Where(collision => player._hitboxRect.Bottom + 5 > collision.Bottom)
             .ToList();
-        
+        //Console.WriteLine(intersectionWithOX.Count);
         //Console.WriteLine($"OX: {intersectionWithOX.Count}, OY: {intersectionWithOY.Count}, Head: {headCollision.Count}");
         //foreach (var collision in intersectionWithOX) {Console.WriteLine(collision);}
         // Обработка столкновения по оси OY
