@@ -9,7 +9,7 @@ public class Death : Enemy
     private float gravity = 800f;
     private Texture2D debugTexture;
     public Death(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 25, damage: 10, graphicsDevice, player)
+        : base(startPosition, health: 100, damage: 10, graphicsDevice, player)
     {
         var idle_walkAnimation = new AnimatedTexture(Vector2.Zero, 0f, 1.1f, 0f);
         idle_walkAnimation.Load(content, "Enemy/Death/Walk_Idle", frameCount: 8, framesPerSec: 9);
@@ -42,7 +42,7 @@ public class Death : Enemy
         base.Update(gameTime);
         MeleeInteractionLogic(gameTime);
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        Chase();
+        Chase(true);
         Jumping();
         // Применяем гравитацию, если не на земле
         if (!isGrounded)

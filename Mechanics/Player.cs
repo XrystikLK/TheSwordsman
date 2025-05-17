@@ -14,7 +14,7 @@ public class Player
 {
     public int health = 100;
     public int damage = 25;
-    
+
     private AnimatedTexture _heroIdle;
     private AnimatedTexture _heroWalking;
     private AnimatedTexture _heroJump;
@@ -22,28 +22,33 @@ public class Player
     private AnimatedTexture _heroAttack;
     private AnimatedTexture _heroHurt;
     private AnimatedTexture _heroDie;
-    
+
     public Vector2 _position;
     public Rectangle _hitboxRect => new Rectangle((int)_position.X + 25, (int)_position.Y + 10, 25, 45);
     public bool isDebug;
-    
+
     private string _currentDirection;
     private Texture2D _debugTexture;
     private Viewport _viewport;
-    
+
     // Физика и движение
     public Vector2 _velocity = Vector2.Zero;
     public bool IsGrounded = false;
     public bool isAttacking = false;
     public bool isHurt = false;
     public Rectangle hitboxAttack;
+
     private KeyboardState _previousKeyboardState;
+
     // Константы движения
     public const float MoveSpeed = 200f;
     public const float Gravity = 700f;
-    public const float JumpForce = -350f;
+    public const float JumpForce = -310f;
     public const float GroundDrag = 0.8f;
     public const float AirDrag = 0.95f;
+
+    public bool IsDying => health <= 0;
+    public bool _dieAnimationFinished = false;
 
     /// <summary>
     /// Конструктор игрового персонажа
@@ -58,28 +63,31 @@ public class Player
         this.isDebug = isDebug;
         this._currentDirection = "Right";
         _viewport = graphicsDevice.Viewport;
-            
-        _heroIdle = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
+
+        _heroIdle = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
+        ;
         _heroIdle.Load(content, "Hero/HeroIdle_SpriteList", 4, 6);
-        
-        _heroWalking = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
+
+        _heroWalking = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
+        ;
         _heroWalking.Load(content, "Hero/HeroRunning_SpriteList", 6, 8);
-        
-        _heroJump = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);;
+
+        _heroJump = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
+        ;
         _heroJump.Load(content, "Hero/HeroJumpV2_SpriteList", 7, 8);
-        
+
         _heroFalling = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroFalling.Load(content, "Hero/HeroFalling_SpriteList", 2, 4);
-        
+
         _heroAttack = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroAttack.Load(content, "Hero/HeroAttack_SpriteList", 5, 12);
-        
+
         _heroHurt = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroHurt.Load(content, "Hero/HeroHurt_SpriteList", 3, 9);
-        
+
         _heroDie = new AnimatedTexture(Vector2.Zero, 0, 1.5f, 0.5f);
         _heroDie.Load(content, "Hero/HeroDie_SpriteListpng", 7, 9);
-        
+
         _debugTexture = new Texture2D(graphicsDevice, 1, 1);
         _debugTexture.SetData(new[] { Color.White });
     }
@@ -91,10 +99,11 @@ public class Player
     public void ProcessMovement(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        KeyboardState keyboardState  = Keyboard.GetState();
-        
+        float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        KeyboardState keyboardState = Keyboard.GetState();
+
         _velocity.X = 0;
-        
+
         if (keyboardState.IsKeyDown(Keys.A))
         {
             _velocity.X = -MoveSpeed;
@@ -120,6 +129,7 @@ public class Player
             _velocity.Y = JumpForce;
             IsGrounded = false;
         }
+
         // Применяем гравитацию, если не на земле
         if (!IsGrounded)
         {
@@ -128,9 +138,9 @@ public class Player
         // Сбрасываем вертикальную скорость на земле
         else if (_velocity.Y > 0)
         {
-            _velocity.Y = 0; 
+            _velocity.Y = 0;
         }
-        
+
         _position += _velocity * deltaTime;
         //Console.WriteLine(_velocity);
 
@@ -138,6 +148,7 @@ public class Player
         {
             isAttacking = true;
         }
+
         if (isAttacking)
         {
             _heroAttack.UpdateFrame(deltaTime);
@@ -150,7 +161,19 @@ public class Player
                 hitboxAttack = new Rectangle(0, 0, 0, 0);
             }
         }
-        
+
+        if (IsDying)
+        {
+            if (_heroDie.IsAnimationComplete)
+            {
+                _dieAnimationFinished = true;
+                return;
+            }
+
+            _heroDie.UpdateFrame(elapsed);
+
+        }
+
         // Console.WriteLine($"HITBOX POSITION: {Hitbox}");
         // Console.WriteLine($"PLAYER POSITION: {_position}");
         // Ограничение движения по горизонтали
@@ -166,14 +189,9 @@ public class Player
     public void Update(GameTime gameTime)
     {
         //Console.WriteLine(IsGrounded);
+        //Console.WriteLine(IsDying);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        if (health <= 0)
-        {
-            _heroDie.UpdateFrame(elapsed);
-            return;
-        }
-        
         if (_velocity.X != 0 && IsGrounded)
             _heroWalking.UpdateFrame(elapsed);
         if (_velocity.X == 0 && IsGrounded)
@@ -189,11 +207,12 @@ public class Player
             {
                 isHurt = false;
             }
+
             return; // Не обновляем другие анимации, пока играет анимация получения урона
         }
 
-        
-        
+
+
         // switch (_currentDirection)
         // {
         //     case "Left":
@@ -212,7 +231,7 @@ public class Player
         // if (_velocity.Y > 1)
         //     _heroFalling.UpdateFrame(elapsed);
     }
-    
+
     /// <summary>
     /// Метод для получения урона
     /// </summary>
@@ -222,23 +241,25 @@ public class Player
         isHurt = true;
         health -= damage;
     }
-    
+
     /// <summary>
     /// Отрисовывает персонажа и его хитбокс(при включенной debug режиме)
     /// </summary>
     /// <param name="spriteBatch">Объект для отрисовки спрайтов</param>
     public void Draw(SpriteBatch spriteBatch)
     {
-        if (health <= 0)
+        if (IsDying)
         {
             _heroDie.DrawFrame(spriteBatch, _position, _currentDirection == "Left");
             return;
         }
+
         if (isHurt)
         {
             _heroHurt.DrawFrame(spriteBatch, _position, _currentDirection == "Left");
             return;
         }
+
         if (IsGrounded)
         {
             if (_velocity.X < 0)
@@ -246,35 +267,35 @@ public class Player
                 if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position, true);
                 else _heroWalking.DrawFrame(spriteBatch, _position, true);
             }
-           else if (_velocity.X > 0)
-           {
-               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
-               else _heroWalking.DrawFrame(spriteBatch, _position);
-           }
-               
-           if (_velocity.X == 0 && _currentDirection == "Left")
-               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position, true);
-               else _heroIdle.DrawFrame(spriteBatch, _position, true);
-           else if(_velocity.X == 0 && _currentDirection == "Right")
-               if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
-               else _heroIdle.DrawFrame(spriteBatch, _position); 
+            else if (_velocity.X > 0)
+            {
+                if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
+                else _heroWalking.DrawFrame(spriteBatch, _position);
+            }
+
+            if (_velocity.X == 0 && _currentDirection == "Left")
+                if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position, true);
+                else _heroIdle.DrawFrame(spriteBatch, _position, true);
+            else if (_velocity.X == 0 && _currentDirection == "Right")
+                if (isAttacking) _heroAttack.DrawFrame(spriteBatch, _position);
+                else _heroIdle.DrawFrame(spriteBatch, _position);
         }
 
         if (_currentDirection == "Right")
         {
-           if (!IsGrounded && _velocity.Y < 0)
-               _heroJump.DrawFrame(spriteBatch, _position);
-           else if (_velocity.Y > 1)
-               _heroFalling.DrawFrame(spriteBatch, _position); 
+            if (!IsGrounded && _velocity.Y < 0)
+                _heroJump.DrawFrame(spriteBatch, _position);
+            else if (_velocity.Y > 1)
+                _heroFalling.DrawFrame(spriteBatch, _position);
         }
         else
         {
             if (!IsGrounded && _velocity.Y < 0)
                 _heroJump.DrawFrame(spriteBatch, _position, true);
             else if (_velocity.Y > 1)
-                _heroFalling.DrawFrame(spriteBatch, _position, true); 
+                _heroFalling.DrawFrame(spriteBatch, _position, true);
         }
-        
+
         // switch (_currentDirection)
         // {
         //     case "Left":
@@ -300,5 +321,5 @@ public class Player
             }
         }
     }
-    
 }
+

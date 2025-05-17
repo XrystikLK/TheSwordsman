@@ -14,11 +14,11 @@ public class ArcaneArcher
     private Texture2D _arrowTexture;
     private bool _arrowActive = false; // Флаг активности стрелы
     private float _arrowDistance = 0f; // Пройденное расстояние стрелой
-    private const float MaxArrowDistance = 500f; // Максимальная дальность полета стрелы
-    private const int _attackRange = 350; 
+    private const float MaxArrowDistance = 450f; // Максимальная дальность полета стрелы
+    private const int _attackRange = 400; 
     
     public ArcaneArcher(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 100, damage: 20, graphicsDevice, player)
+        : base(startPosition, health: 50, damage: 15, graphicsDevice, player)
     {
         _arrowTexture = content.Load<Texture2D>("Enemy/ArcaneArcher/Arrow");
         
@@ -58,6 +58,7 @@ public class ArcaneArcher
 
     public override void Update(GameTime gameTime)
     {
+        //Console.WriteLine(_arrowHitBox);
         var distanceToPlayer = Vector2.Distance(_player._position, position);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
@@ -66,8 +67,8 @@ public class ArcaneArcher
         if (_arrowActive)
         {
             float direction = playerIsRight ? 1f: -1f;
-            _arrowPosition.X += direction * 450f * elapsed; // Увеличиваем скорость стрелы
-            _arrowDistance += 300f * elapsed;
+            _arrowPosition.X += direction * 600f * elapsed; // Увеличиваем скорость стрелы
+            _arrowDistance += 600f * elapsed;
             _arrowHitBox.X = (int)_arrowPosition.X;
             _arrowHitBox.Y = (int)_arrowPosition.Y;
             

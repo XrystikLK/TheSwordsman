@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SomeTest.Maps;
 
-public class Level2 : IScene
+public class Level4 : IScene
 {
     private ContentManager contentManager;
     private SceneManager sceneManager;
@@ -15,12 +15,16 @@ public class Level2 : IScene
     
     private EnemyManager enemyManager;
     private Skeleton _skeleton;
+    private GoldSkeleton _goldSkeleton;
+    private FireSpirit _fireSpirit;
+    private ArcaneArcher _arcaneArcher;
+    private Death _death;
     
     private LoadMap mapFg;
     private LoadMap mapMg;
     private LoadMap mapCollision;
     private Texture2D texture;
-    public Level2(ContentManager contentManager, SceneManager sceneManager, GraphicsDevice graphicsDevice, Player player)
+    public Level4(ContentManager contentManager, SceneManager sceneManager, GraphicsDevice graphicsDevice, Player player)
     {
         this.player = player;
         this.sceneManager = sceneManager;
@@ -33,18 +37,14 @@ public class Level2 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level2/level2_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level2/level2_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level2/level2_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level2/level2_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level2/level2_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level2/level2_collision.csv");
+        mapFg = new LoadMap("../../../Maps/Level4/level4_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("../../../Maps/Level4/level4_fg.csv");
+        mapMg = new LoadMap("../../../Maps/Level4/level4_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("../../../Maps/Level4/level4_mg.csv");
+        mapCollision = new LoadMap("../../../Maps/Level4/level4_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("../../../Maps/Level4/level4_collision.csv");
         
-        enemyManager = new EnemyManager();
-        _skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(50, 495), player);
-        
-        enemyManager.AddEnemy(_skeleton);
-        player._position = new Vector2(450, 0);
+        player._position = new Vector2(-25, 250);
     }
 
     public void Update(GameTime gameTime)
@@ -53,18 +53,19 @@ public class Level2 : IScene
         var b = player._hitboxRect.Width;
         if (player._hitboxRect.X + player._hitboxRect.Width > 900)
         {
-            sceneManager.AddScene(new Level3(contentManager, sceneManager, graphicsDevice, player));
+            sceneManager.AddScene(new Level5(contentManager, sceneManager, graphicsDevice, player));
         }
         mapCollision.Update(player);
-        mapCollision.Update(_skeleton);
-        enemyManager.Update(gameTime);
+        if (player._hitboxRect.Y >= 645)
+        {
+            player._position = new Vector2(-25, 250);
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         mapMg.Draw(spriteBatch);
         mapFg.Draw(spriteBatch);
-        enemyManager.Draw(spriteBatch);
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
 }

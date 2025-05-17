@@ -9,7 +9,7 @@ public class Skeleton : Enemy
     private float gravity = 800f;
     private Texture2D debugTexture;
     public Skeleton(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 25, damage: 10, graphicsDevice, player)
+        : base(startPosition, health: 75, damage: 10, graphicsDevice, player)
     {
         var idleAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
         idleAnimation.Load(content, "Enemy/WhiteSkeleton/Idle", frameCount: 8, framesPerSec: 9);
@@ -43,10 +43,10 @@ public class Skeleton : Enemy
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
+        MeleeInteractionLogic(gameTime, stopWhenHurting: true);
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         Chase();
         Jumping();
-        MeleeInteractionLogic(gameTime);
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
         {

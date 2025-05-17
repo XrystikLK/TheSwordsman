@@ -16,7 +16,6 @@ public class Level3 : IScene
     private EnemyManager enemyManager;
     private Skeleton _skeleton;
     private GoldSkeleton _goldSkeleton;
-    private FireSpirit _fireSpirit;
     private Chest _chest;
     
     private LoadMap mapFg;
@@ -43,13 +42,13 @@ public class Level3 : IScene
         mapCollision.LoadMapp("../../../Maps/Level3/level3_collision.csv");
         
         enemyManager = new EnemyManager();
-        _skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(250, 450), player);
-        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(150, 450), player);
-        _fireSpirit = new FireSpirit(contentManager, graphicsDevice, new Vector2(500, 50), player);
-        _chest = new Chest(contentManager, graphicsDevice, new Vector2(250, 450), player);
         
-        //enemyManager.AddEnemy(_skeleton);
-        //enemyManager.AddEnemy(_fireSpirit);
+        _skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(250, 450), player);
+        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(750, 325), player);
+        _chest = new Chest(contentManager, graphicsDevice, new Vector2(835, 350), player);
+        
+        enemyManager.AddEnemy(_skeleton);
+        enemyManager.AddEnemy(_goldSkeleton);
         enemyManager.AddEnemy(_chest);
         player._position = new Vector2(40, 450);
     }
@@ -64,11 +63,11 @@ public class Level3 : IScene
         // }
         if (player._hitboxRect.X + player._hitboxRect.Width > 920)
         {
-            sceneManager.AddScene(new Level3(contentManager, sceneManager, graphicsDevice, player));
+            sceneManager.AddScene(new Level4(contentManager, sceneManager, graphicsDevice, player));
         }
         mapCollision.Update(player);
-        //mapCollision.Update(_skeleton);
-        //mapCollision.Update(_goldSkeleton);
+        mapCollision.Update(_skeleton);
+        mapCollision.Update(_goldSkeleton);
         mapCollision.Update(_chest);
         enemyManager.Update(gameTime);
     }

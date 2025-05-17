@@ -9,7 +9,7 @@ public class GoldSkeleton : Enemy
     private float gravity = 800f;
     private Texture2D debugTexture;
     public GoldSkeleton(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 150, damage: 20, graphicsDevice, player)
+        : base(startPosition, health: 125, damage: 15, graphicsDevice, player)
     {
         var idleAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
         idleAnimation.Load(content, "Enemy/GoldSkeleton/Idle", frameCount: 8, framesPerSec: 9);
@@ -43,10 +43,10 @@ public class GoldSkeleton : Enemy
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        Chase();
-        Jumping();
         MeleeInteractionLogic(gameTime);
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Chase(haveDetectionRange: true, true);
+        Jumping();
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
         {

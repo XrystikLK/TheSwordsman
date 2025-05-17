@@ -10,7 +10,7 @@ public class Chest : Enemy
     private Texture2D debugTexture;
     private bool _isActive = false;
     public Chest(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 25, damage: 10, graphicsDevice, player)
+        : base(startPosition, health: 75, damage: 10, graphicsDevice, player)
     {
         
         var attackAnimation = new AnimatedTexture(Vector2.Zero, 0f, 1.1f, 0f);

@@ -11,6 +11,12 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Hurt.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Idle.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/AttackMelee.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/AttackRange.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Defeat_Appearance.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Immune.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Projectile.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Attack.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Die.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Hurt.png</File>
@@ -45,6 +51,12 @@
   </SourceFiles>
   <DestFiles>
     <File>Enemy/WhiteSkeleton/Idle.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

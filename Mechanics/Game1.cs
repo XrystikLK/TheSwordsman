@@ -19,12 +19,11 @@ public class Game1 : Game
     private Rectangle _whiteSquare;
     private double testTime;
     
-    private LoadMap _map;
-    private LoadMap _mapCollisions;
+    private LoadMap mapFg;
+    private LoadMap mapMg;
+    private LoadMap mapCollision;
     
     private List<Rectangle> intersections;
-    private EnemyManager enemyManager; //
-    private Skeleton _skeleton; //
 
     private SpriteFont _font;
     private SceneManager sceneManager;
@@ -53,48 +52,54 @@ public class Game1 : Game
         
         _font = Content.Load<SpriteFont>("Fonts/Main");
         
-        _playerPosition = new Vector2(450, 100);
+        _playerPosition = new Vector2(604, 409);
         _player = new Player(_playerPosition, true, Content, GraphicsDevice);
         
         debugTexture = new Texture2D(GraphicsDevice, 1, 1);
         debugTexture.SetData(new[] { Color.White });
         
-        _map = new LoadMap("../../../Maps/level2_face.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
-        _map.LoadMapp("../../../Maps/level2_face.csv");
-        _mapCollisions = new LoadMap("../../../Maps/level2_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
-        _mapCollisions.LoadMapp("../../../Maps/level2_collision.csv");
+        mapFg = new LoadMap("../../../Maps/Level0/level0_fg.csv", "TextureAtlas/Dungeon", Content, GraphicsDevice, 16);
+        mapFg.LoadMapp("../../../Maps/Level0/level0_fg.csv");
+        mapMg = new LoadMap("../../../Maps/Level0/level0_mg.csv", "TextureAtlas/Dungeon", Content, GraphicsDevice, 16);
+        mapMg.LoadMapp("../../../Maps/Level0/level0_mg.csv");
+        mapCollision = new LoadMap("../../../Maps/Level0/level0_collision.csv", "TextureAtlas/ALL_content", Content, GraphicsDevice, 16);
+        mapCollision.LoadMapp("../../../Maps/Level0/level0_collision.csv");
         
-        enemyManager = new EnemyManager(); //
-        _skeleton = new Skeleton(Content, GraphicsDevice, new Vector2(125, 370), _player); //
-        //_skeleton1 = new Skeleton(Content, GraphicsDevice, new Vector2(350, 170), _player);
-        enemyManager.AddEnemy(_skeleton); // 
-        //enemyManager.AddEnemy(_skeleton1);
-        
-        //sceneManager.AddScene(new Level2(Content, sceneManager, GraphicsDevice, _player));
     }
 
     protected override void Update(GameTime gameTime) 
     {
+        var _pausedGameTime = new GameTime(gameTime.TotalGameTime, TimeSpan.Zero);
+        KeyboardState keyboardState  = Keyboard.GetState();
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
         
+        if (_player._dieAnimationFinished)
+        {
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                RestartGame();
+            }
+            base.Update(_pausedGameTime);
+            return;
+        }
         _player.ProcessMovement(gameTime);
         _player.Update(gameTime);
         if (!isNextScene)
         {
-            _mapCollisions.Update(_player);
+            mapCollision.Update(_player);
         }
         
-        enemyManager.Update(gameTime); // 
         if (_player._hitboxRect.X + _player._hitboxRect.Width > 975)
         {
             if (!isNextScene)
             {
                 isNextScene = true;
                 sceneManager.AddScene(new Level1(Content, sceneManager, GraphicsDevice, _player));
-                _map.ClearMap(); // Очищаем карты
-                _mapCollisions.ClearMap();
+                mapMg.ClearMap();
+                mapFg.ClearMap();
+                mapCollision.ClearMap();
             }
             
         }
@@ -114,26 +119,43 @@ public class Game1 : Game
         //     testTime = 0;
         // }
         
-        //_mapCollisions.Update(_skeleton);
         if (_player._hitboxRect.Intersects(_whiteSquare))
         {
             Console.WriteLine("You hit the wall");
         }
         base.Update(gameTime);
+        Console.WriteLine(sceneManager.scenesStack.Count);
     }
+    
+    private void RestartGame()
+    {
+        sceneManager.Clear();
+        _player._dieAnimationFinished = false;
+        _player.health = 100;
+        sceneManager.AddScene(new Level1(Content, sceneManager, GraphicsDevice, _player));
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         // TODO: Add your drawing code here
+        Console.WriteLine(_player._position);
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         if (isNextScene) sceneManager.GetCurrentScene().Draw(_spriteBatch);
+        mapMg.Draw(_spriteBatch);
+        mapFg.Draw(_spriteBatch);
         _player.Draw(_spriteBatch);
-        enemyManager.Draw(_spriteBatch);
         _spriteBatch.DrawString(_font, "Health:" + _player.health, new Vector2(435, 50), Color.Red);
         //_spriteBatch.Draw(debugTexture, _whiteSquare, Color.White);
-        _map?.Draw(_spriteBatch);
-        _spriteBatch.End();
         
+        if (_player._dieAnimationFinished)
+        {
+            var fadeColor = Color.Black * 0.7f;
+            
+            _spriteBatch.Draw(debugTexture, new Rectangle(0, 0, 960, 640), fadeColor);
+            _spriteBatch.DrawString(_font, "Нажмите R что начать заново", new Vector2(300, 320), Color.Red);
+        }
+        _spriteBatch.End();
         base.Draw(gameTime);
     }
 }

@@ -87,12 +87,13 @@ public abstract class Enemy
     /// Логика взаимодействия игрока и моба
     /// </summary>
     /// <param name="gameTime">Игрвое время</param>
-    public void MeleeInteractionLogic(GameTime gameTime)
+    public void MeleeInteractionLogic(GameTime gameTime, bool slowWhenHurting = false, bool stopWhenHurting = false)
     {
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
         if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting))
         {
-            velocity.X = 0;
+            if (slowWhenHurting) velocity.X = 35f;
+            if (stopWhenHurting) velocity.X = 0;
             // 4) Логика нанесения урона монстру
             if (_player.hitboxAttack.Intersects(hitbox)) 
             {
@@ -117,8 +118,12 @@ public abstract class Enemy
             
             }
         }
-        else velocity.X = originalVelocity.X;
+        else
+        {
+            if (slowWhenHurting || stopWhenHurting) velocity.X = originalVelocity.X;
+        }
     }
+    
 
     public void TakeDamage(int amount)
     {
@@ -148,12 +153,39 @@ public abstract class Enemy
         position.Y = newY;
     }
 
-    public void Chase()
+    public void Chase(bool haveDetectionRange = false, bool stopWhenHurting= false)
     {
-        if (isDying) return;
-        // float distanceToPlayer = Vector2.Distance(new Vector2(hitbox.X, Hitbox.Y), new Vector2(_player._position.X, _player._position.Y));
-        // Console.WriteLine(distanceToPlayer);
+        if (isDying)
+        {
+            velocity.X = 0;
+            return;
+        }
         
+        float distanceToPlayer = Vector2.Distance(new Vector2(hitbox.X, Hitbox.Y), new Vector2(_player._position.X, _player._position.Y));
+        // Console.WriteLine(distanceToPlayer);
+        if (haveDetectionRange)
+        {
+            if (distanceToPlayer <= 350)
+            {
+                if (!isHurting)
+                {
+                    velocity.X = playerIsRight ? Math.Abs(originalVelocity.X) : -Math.Abs(originalVelocity.X);
+                }
+                else if (stopWhenHurting)
+                {
+                    velocity.X = playerIsRight ? Math.Abs(35f) : -Math.Abs(35f);
+                }
+                else velocity.X = playerIsRight ? Math.Abs(originalVelocity.X) : -Math.Abs(originalVelocity.X);
+            }
+            else
+            {
+                if (!isHurting)
+                {
+                    velocity.X = 0;
+                }
+            }
+        }
+        else
         velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
     }
 

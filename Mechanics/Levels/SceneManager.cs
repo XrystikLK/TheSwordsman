@@ -4,7 +4,7 @@ namespace SomeTest.Maps;
 
 public class SceneManager
 {
-    private Stack<IScene> scenesStack;
+    public Stack<IScene> scenesStack;
 
     public SceneManager()
     {
@@ -24,7 +24,12 @@ public class SceneManager
 
     public IScene GetCurrentScene()
     {
-        return scenesStack.Peek();
+        return scenesStack.Count > 0 ? scenesStack.Peek() : null;
     }
-    
+
+    public void Clear()
+    {
+        scenesStack.Clear();
+    }
+
 }
