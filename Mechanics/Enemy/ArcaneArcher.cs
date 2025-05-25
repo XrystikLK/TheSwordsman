@@ -16,6 +16,7 @@ public class ArcaneArcher
     private float _arrowDistance = 0f; // Пройденное расстояние стрелой
     private const float MaxArrowDistance = 450f; // Максимальная дальность полета стрелы
     private const int _attackRange = 400; 
+    private float _arrowDirection;
     
     public ArcaneArcher(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
         : base(startPosition, health: 50, damage: 15, graphicsDevice, player)
@@ -29,7 +30,7 @@ public class ArcaneArcher
         attackAnimation.Load(content, "Enemy/ArcaneArcher/Attack", frameCount: 7, framesPerSec: 6);
         
         var dieAnimation = new AnimatedTexture(Vector2.Zero, 0f, 1.2f, 0f);
-        dieAnimation.Load(content, "Enemy/ArcaneArcher/Die", frameCount: 8, framesPerSec: 12);
+        dieAnimation.Load(content, "Enemy/ArcaneArcher/Die", frameCount: 8, framesPerSec: 10);
         
         var walkingAnimation = new AnimatedTexture(Vector2.Zero, 0f, 1.2f, 0f);
         walkingAnimation.Load(content, "Enemy/ArcaneArcher/Walk", frameCount: 8, framesPerSec: 12);
@@ -49,7 +50,7 @@ public class ArcaneArcher
 
         debugTexture = new Texture2D(graphicsDevice, 1, 1);
         debugTexture.SetData(new[] { Color.White });
-        hitbox = new Rectangle((int)position.X, (int)position.Y, 35, 58);
+        hitbox = new Rectangle((int)position.X, (int)position.Y, 40, 58);
         
         velocity = new Vector2(100f, 0);
         originalVelocity = velocity;
@@ -59,6 +60,7 @@ public class ArcaneArcher
     public override void Update(GameTime gameTime)
     {
         //Console.WriteLine(_arrowHitBox);
+        base.Update(gameTime);
         var distanceToPlayer = Vector2.Distance(_player._position, position);
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
@@ -66,8 +68,7 @@ public class ArcaneArcher
         // Обновление позиции и состояния стрелы
         if (_arrowActive)
         {
-            float direction = playerIsRight ? 1f: -1f;
-            _arrowPosition.X += direction * 600f * elapsed; // Увеличиваем скорость стрелы
+            _arrowPosition.X += _arrowDirection * 600f * elapsed; // Увеличиваем скорость стрелы
             _arrowDistance += 600f * elapsed;
             _arrowHitBox.X = (int)_arrowPosition.X;
             _arrowHitBox.Y = (int)_arrowPosition.Y;
@@ -93,37 +94,13 @@ public class ArcaneArcher
         if (animations["Attack"].IsAnimationComplete && !_arrowActive && currentAnimation == "Attack")
         {
             // Создаем новую стрелу
+            _arrowDirection = playerIsRight ? 1f : -1f;
             _arrowActive = true;
             _arrowDistance = 0f;
             _arrowPosition = new Vector2(hitbox.Right, hitbox.Center.Y);
             _arrowHitBox = new Rectangle((int)_arrowPosition.X, (int)_arrowPosition.Y, 37, 5);
         }
-
-        //Console.WriteLine(_arrowHitBox);
-        
-        playerIsRight = _player._position.X > position.X;
-        playerIsBottom = _player._hitboxRect.Center.Y < position.Y;
-        // 1) Если в процессе “умирания” — обновляем только Die-анимацию
-        if (isDying)
-        {
-            var dieAnim = animations["Die"];
-            dieAnim.UpdateFrame(elapsed);
-        
-            if (dieAnim.IsAnimationComplete)
-                isRemoved = true;
-            //hitbox = new Rectangle(0, 0, 0, 0);
-            
-            return;
-        }
-        
-        // 2) Обычное обновление анимации
-        if (animations.ContainsKey(currentAnimation))
-        {
-            if (currentAnimation == "Attack" && _previousAnimation != "Attack") animations["Attack"].Reset();
-            if (currentAnimation == "Hurt" && _previousAnimation != "Hurt") animations["Hurt"].Reset();
-            animations[currentAnimation].UpdateFrame(elapsed);
-        }
-
+        Chase();
         if ((distanceToPlayer <= _attackRange || _player.hitboxAttack.Intersects(hitbox) || isHurting))
         {
             velocity.X = 0;
@@ -151,11 +128,11 @@ public class ArcaneArcher
             
             }
         }
-        else velocity.X = originalVelocity.X;
+        //else velocity.X = originalVelocity.X;
         
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        Chase();
-        Jumping();
+        
+        //Jumping();
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
         {
@@ -164,7 +141,7 @@ public class ArcaneArcher
 
         _previousAnimation = currentAnimation;
         position += velocity * deltaTime;
-        hitbox.X = (int)(position.X) + 30;
+        hitbox.X = (int)(position.X) + 25;
         hitbox.Y = (int)(position.Y);
         
         if (_player.hitboxAttack.Intersects(hitbox) && !isDying && _player.isAttacking)
@@ -204,6 +181,6 @@ public class ArcaneArcher
                 0f
             );
         }
-        spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
+        //spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
     }
 }

@@ -15,7 +15,7 @@ public class Skeleton : Enemy
         idleAnimation.Load(content, "Enemy/WhiteSkeleton/Idle", frameCount: 8, framesPerSec: 9);
         
         var attackAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
-        attackAnimation.Load(content, "Enemy/WhiteSkeleton/Attack", frameCount: 10, framesPerSec: 14);
+        attackAnimation.Load(content, "Enemy/WhiteSkeleton/Attack", frameCount: 10, framesPerSec: 15);
         
         var dieAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.9f, 0f);
         dieAnimation.Load(content, "Enemy/WhiteSkeleton/Die", frameCount: 13, framesPerSec: 13);
@@ -43,9 +43,10 @@ public class Skeleton : Enemy
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        MeleeInteractionLogic(gameTime, stopWhenHurting: true);
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         Chase();
+        MeleeInteractionLogic(gameTime, 5, stopWhenHurting: true, stopWhenIntersection: true);
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        
         Jumping();
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
@@ -78,6 +79,6 @@ public class Skeleton : Enemy
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
-        spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
+        //spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
     }
 }

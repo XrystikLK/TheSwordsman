@@ -25,6 +25,90 @@
 /processorParam:TextureFormat=Color
 /build:../../../../Desktop/Idle.png;Enemy/WhiteSkeleton/Idle.png
 
+#begin Audio/Attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Attack.wav
+
+#begin Audio/Attack2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Attack2.wav
+
+#begin Audio/BossFight.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/BossFight.mp3
+
+#begin Audio/Hurt.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Hurt.wav
+
+#begin Audio/Hurt2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Hurt2.wav
+
+#begin Audio/Jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Jump.wav
+
+#begin Audio/MapAmbiend.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/MapAmbiend.mp3
+
+#begin Audio/Running.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Running.mp3
+
+#begin Audio/Running2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Running2.mp3
+
+#begin Audio/SwordSwing.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/SwordSwing.mp3
+
+#begin BossHealthBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BossHealthBar.png
+
+#begin Control.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Control.png
+
 #begin Enemy/ArcaneArcher/Arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -97,6 +181,18 @@
 /processorParam:TextureFormat=Color
 /build:Enemy/ArcaneArcher/Walk.png
 
+#begin Enemy/Boss/Appearance.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemy/Boss/Appearance.png
+
 #begin Enemy/Boss/AttackMelee.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -121,7 +217,7 @@
 /processorParam:TextureFormat=Color
 /build:Enemy/Boss/AttackRange.png
 
-#begin Enemy/Boss/Defeat_Appearance.png
+#begin Enemy/Boss/Die.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -131,7 +227,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Enemy/Boss/Defeat_Appearance.png
+/build:Enemy/Boss/Die.png
+
+#begin Enemy/Boss/Hurt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemy/Boss/Hurt.png
 
 #begin Enemy/Boss/Immune.png
 /importer:TextureImporter
@@ -144,6 +252,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemy/Boss/Immune.png
+
+#begin Enemy/Boss/Laser.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemy/Boss/Laser.png
+
+#begin Enemy/Boss/LaserAttack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemy/Boss/LaserAttack.png
 
 #begin Enemy/Boss/Projectile.png
 /importer:TextureImporter
@@ -416,6 +548,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Main.spritefont
 
+#begin HealtBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HealtBar.png
+
 #begin Hero/HeroAttack_SpriteList.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -511,6 +655,78 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hero/HeroRunning_SpriteList.png
+
+#begin Maps/Level0/level0_collision.csv
+/copy:Maps/Level0/level0_collision.csv
+
+#begin Maps/Level0/level0_fg.csv
+/copy:Maps/Level0/level0_fg.csv
+
+#begin Maps/Level0/level0_mg.csv
+/copy:Maps/Level0/level0_mg.csv
+
+#begin Maps/Level1/level1_collision.csv
+/copy:Maps/Level1/level1_collision.csv
+
+#begin Maps/Level1/level1_fg.csv
+/copy:Maps/Level1/level1_fg.csv
+
+#begin Maps/Level1/level1_mg.csv
+/copy:Maps/Level1/level1_mg.csv
+
+#begin Maps/Level2/level2_collision.csv
+/copy:Maps/Level2/level2_collision.csv
+
+#begin Maps/Level2/level2_fg.csv
+/copy:Maps/Level2/level2_fg.csv
+
+#begin Maps/Level2/level2_mg.csv
+/copy:Maps/Level2/level2_mg.csv
+
+#begin Maps/Level3/level3_collision.csv
+/copy:Maps/Level3/level3_collision.csv
+
+#begin Maps/Level3/level3_fg.csv
+/copy:Maps/Level3/level3_fg.csv
+
+#begin Maps/Level3/level3_mg.csv
+/copy:Maps/Level3/level3_mg.csv
+
+#begin Maps/level4/level4_collision.csv
+/copy:Maps/level4/level4_collision.csv
+
+#begin Maps/level4/level4_fg.csv
+/copy:Maps/level4/level4_fg.csv
+
+#begin Maps/level4/level4_mg.csv
+/copy:Maps/level4/level4_mg.csv
+
+#begin Maps/Level6/level6_collision.csv
+/copy:Maps/Level6/level6_collision.csv
+
+#begin Maps/Level6/level6_fg.csv
+/copy:Maps/Level6/level6_fg.csv
+
+#begin Maps/Level6/level6_mg.csv
+/copy:Maps/Level6/level6_mg.csv
+
+#begin Maps/Level8/level8_collision.csv
+/copy:Maps/Level8/level8_collision.csv
+
+#begin Maps/Level8/level8_fg.csv
+/copy:Maps/Level8/level8_fg.csv
+
+#begin Maps/Level8/level8_mg.csv
+/copy:Maps/Level8/level8_mg.csv
+
+#begin Maps/Level9/level9_collision.csv
+/copy:Maps/Level9/level9_collision.csv
+
+#begin Maps/Level9/level9_fg.csv
+/copy:Maps/Level9/level9_fg.csv
+
+#begin Maps/Level9/level9_mg.csv
+/copy:Maps/Level9/level9_mg.csv
 
 #begin TextureAtlas/ALL_content.png
 /importer:TextureImporter

@@ -5,16 +5,32 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/../../../../Desktop/Idle.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Attack.wav</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Attack2.wav</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/BossFight.mp3</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Hurt.wav</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Hurt2.wav</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Jump.wav</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/MapAmbiend.mp3</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Running.mp3</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/Running2.mp3</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Audio/SwordSwing.mp3</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/BossHealthBar.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Control.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Arrow.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Attack.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Die.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Hurt.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Idle.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/ArcaneArcher/Walk.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Appearance.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/AttackMelee.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/AttackRange.png</File>
-    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Defeat_Appearance.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Die.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Hurt.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Immune.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Laser.png</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/LaserAttack.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Projectile.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Boss/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/Chest/Attack.png</File>
@@ -38,6 +54,7 @@
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Hurt.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Enemy/WhiteSkeleton/Walk.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Fonts/Main.spritefont</File>
+    <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/HealtBar.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroAttack_SpriteList.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroDie_SpriteListpng.png</File>
     <File>C:/Users/ilya/RiderProjects/SomeTest/SomeTest/Content/Hero/HeroFalling_SpriteList.png</File>
@@ -51,6 +68,23 @@
   </SourceFiles>
   <DestFiles>
     <File>Enemy/WhiteSkeleton/Idle.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

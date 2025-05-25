@@ -4,11 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using SomeTest;
 
+/// <summary>
+/// Базовый абстрактный класс врага, содержащий общую логику поведения и взаимодействия с игроком.
+/// </summary>
 public abstract class Enemy
 {
     protected Player _player;
     protected Vector2 position;
-    protected int health;
+    public int health;
     protected int damage;
     public bool isGrounded = false; 
     public Rectangle hitbox;
@@ -30,6 +33,14 @@ public abstract class Enemy
     
     public bool IsRemoved => isRemoved;
 
+    /// <summary>
+    /// Конструктор врага
+    /// </summary>
+    /// <param name="startPosition">Начальная позиция врага</param>
+    /// <param name="health">Здоровье врага</param>
+    /// <param name="damage">Урон врага</param>
+    /// <param name="graphicsDevice">Графическое устройство</param>
+    /// <param name="player">Ссылка на объект игрока</param>
     public Enemy(Vector2 startPosition, int health, int damage, GraphicsDevice graphicsDevice, Player player)
     {
         this.position = startPosition;
@@ -41,12 +52,15 @@ public abstract class Enemy
         knockbackVelocity = new Vector2(300f, 200f);
     }
 
+    /// <summary>
+    /// Обновляет состояние врага.
+    /// </summary>
     public virtual void Update(GameTime gameTime)
     {
         float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
         playerIsRight = _player._position.X > position.X;
-        playerIsBottom = _player._hitboxRect.Center.Y < position.Y;
+        playerIsBottom = _player._hitboxRect.Y < position.Y;
         // 1) Если в процессе “умирания” — обновляем только Die-анимацию
         if (isDying)
         {
@@ -55,7 +69,6 @@ public abstract class Enemy
         
             if (dieAnim.IsAnimationComplete)
                 isRemoved = true;
-            //hitbox = new Rectangle(0, 0, 0, 0);
             
             return;
         }
@@ -67,11 +80,11 @@ public abstract class Enemy
             if (currentAnimation == "Hurt" && _previousAnimation != "Hurt") animations["Hurt"].Reset();
             animations[currentAnimation].UpdateFrame(elapsed);
         }
-        
-        // Наверное нужно будет это прописывать во всех классах
-        
     }
 
+    /// <summary>
+    /// Отрисовывает врага на экране
+    /// </summary>
     public virtual void Draw(SpriteBatch spriteBatch)
     {
         //Console.WriteLine(distanceToPlayer - hitbox.Width);
@@ -84,16 +97,21 @@ public abstract class Enemy
 
     
     /// <summary>
-    /// Логика взаимодействия игрока и моба
+    /// Логика ближнего боя между игроком и врагом
     /// </summary>
-    /// <param name="gameTime">Игрвое время</param>
-    public void MeleeInteractionLogic(GameTime gameTime, bool slowWhenHurting = false, bool stopWhenHurting = false)
+    /// <param name="gameTime">Игровое время</param>
+    /// <param name="frameGetDamage">Кадр в анимации врага, на которых игрок должен получить урон</param>
+    /// <param name="stopWhenHurting">Останавливать ли врага при получении урона</param>
+    /// <param name="slowWhenHurting">Замедлять врага при нанесении урона</param>
+    /// <param name="stopWhenIntersection">Останавливать врага при пересечении хотбоксов с игроком</param>
+    public void MeleeInteractionLogic(GameTime gameTime, int? frameGetDamage = null, bool stopWhenHurting = false, bool slowWhenHurting= false, bool stopWhenIntersection = false ) // frameGetDamage - кадр из анимации на которой должен проходить урон
     {
         float total = (float)gameTime.TotalGameTime.TotalSeconds; 
-        if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting))
+        if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting) && !isDying)
         {
-            if (slowWhenHurting) velocity.X = 35f;
-            if (stopWhenHurting) velocity.X = 0;
+            if (stopWhenHurting && isHurting) velocity.X = 0;
+            if (slowWhenHurting && isHurting) velocity.X = playerIsRight ? Math.Abs(35f) : -Math.Abs(35f);
+            if (stopWhenIntersection && _player._hitboxRect.Intersects(hitbox)) velocity.X = 0;
             // 4) Логика нанесения урона монстру
             if (_player.hitboxAttack.Intersects(hitbox)) 
             {
@@ -106,29 +124,79 @@ public abstract class Enemy
                 }
             }
             // 3) Логика столкновений и урона
-            if (_player._hitboxRect.Intersects(hitbox))
+            bool shouldApplyDamage = 
+                frameGetDamage == null || 
+                animations["Attack"].frame == frameGetDamage.Value;
+            
+            if (_player._hitboxRect.Intersects(hitbox) && shouldApplyDamage)
             {
                 if (total - _lastDamageTimeHero >= DamageCooldown)
                 {
                     _lastDamageTimeHero = total;
                     _player.TakeDamage(damage);
-                    //Нужно сделать чтобы игрока отталкивало назад при столкновении
-                    //Console.WriteLine("Enemy hit player");
                 }
-            
             }
         }
-        else
-        {
-            if (slowWhenHurting || stopWhenHurting) velocity.X = originalVelocity.X;
-        }
+        // else
+        // {
+        //     if (stopWhenHurting) velocity.X = originalVelocity.X;
+        // }
     }
-    
+    /// <summary>
+    /// Логика ближнего боя между игроком и врагом
+    /// </summary>
+    /// <param name="gameTime">Игровое время</param>
+    /// <param name="frameGetDamage">Кадр в анимации врага, на которых игрок должен получить урон</param>
+    /// <param name="stopWhenHurting">Останавливать ли врага при получении урона</param>
+    /// <param name="slowWhenHurting">Замедлять врага при нанесении урона</param>
+    /// <param name="stopWhenIntersection">Останавливать врага при пересечении хотбоксов с игроком</param>
+    public void MeleeInteractionLogic(GameTime gameTime, ref int bossHealthBar, int? frameGetDamage = null, bool stopWhenHurting = false, bool slowWhenHurting= false, bool stopWhenIntersection = false ) // frameGetDamage - кадр из анимации на которой должен проходить урон
+    {
+        float total = (float)gameTime.TotalGameTime.TotalSeconds; 
+        if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting) && !isDying)
+        {
+            if (stopWhenHurting && isHurting) velocity.X = 0;
+            if (slowWhenHurting && isHurting) velocity.X = playerIsRight ? Math.Abs(35f) : -Math.Abs(35f);
+            if (stopWhenIntersection && _player._hitboxRect.Intersects(hitbox)) velocity.X = 0;
+            // 4) Логика нанесения урона монстру
+            if (_player.hitboxAttack.Intersects(hitbox)) 
+            {
+                // Возможно сделать систему отталкивания, но пока так
+                if (total - _lastDamageTimeEnemy >= DamageCooldown)
+                {
+                    bossHealthBar -= 20;
+                    //Console.WriteLine("Enemy get damage ");
+                    _lastDamageTimeEnemy = total;
+                    TakeDamage(_player.damage);
+                }
+            }
+            // 3) Логика столкновений и урона
+            bool shouldApplyDamage = 
+                frameGetDamage == null || 
+                animations["Attack"].frame == frameGetDamage.Value;
+            
+            if (_player._hitboxRect.Intersects(hitbox) && shouldApplyDamage)
+            {
+                if (total - _lastDamageTimeHero >= DamageCooldown)
+                {
+                    _lastDamageTimeHero = total;
+                    _player.TakeDamage(damage);
+                }
+            }
+        }
+        // else
+        // {
+        //     if (stopWhenHurting) velocity.X = originalVelocity.X;
+        // }
+    }
 
+    /// <summary>
+    /// Нанесение урона врагу
+    /// </summary>
+    /// <param name="amount">Количество урона</param>
     public void TakeDamage(int amount)
     {
         health -= amount;
-        Console.WriteLine(health);
         if (health <= 0)
         {
             Die();
@@ -136,26 +204,39 @@ public abstract class Enemy
         }
     }
 
+    /// <summary>
+    /// Вызывает гибель врага
+    /// </summary>
     protected virtual void Die()
     {
         isDying = true;
         velocity = Vector2.Zero;
     }
     
-    
-    public void SetPosition(Vector2 newPosition)
-    {
-        position = newPosition;
-    }
 
+    /// <summary>
+    /// Устанавлиет новую позицию врага(ось OY)
+    /// </summary>
+    /// <param name="newY">Значение координаты по оси OY</param>
     public void SetPositionY(float newY)
     {
         position.Y = newY;
     }
 
-    public void Chase(bool haveDetectionRange = false, bool stopWhenHurting= false)
+    /// <summary>
+    /// Логика преследования игрока
+    /// </summary>
+    /// <param name="haveDetectionRange">Имеет ли враг радиус обнаружения</param>
+    
+    public void Chase(bool haveDetectionRange = false)
     {
         if (isDying)
+        {
+            velocity.X = 0;
+            return;
+        }
+        //Если враг находится под игроком
+        if (_player._position.Y - position.Y < -20f && Math.Abs(_player._position.X - position.X) <= 2f)
         {
             velocity.X = 0;
             return;
@@ -170,11 +251,12 @@ public abstract class Enemy
                 if (!isHurting)
                 {
                     velocity.X = playerIsRight ? Math.Abs(originalVelocity.X) : -Math.Abs(originalVelocity.X);
+                    
                 }
-                else if (stopWhenHurting)
-                {
-                    velocity.X = playerIsRight ? Math.Abs(35f) : -Math.Abs(35f);
-                }
+                // else if (slowWhenHurting)
+                // {
+                //     velocity.X = playerIsRight ? Math.Abs(35f) : -Math.Abs(35f);
+                // }
                 else velocity.X = playerIsRight ? Math.Abs(originalVelocity.X) : -Math.Abs(originalVelocity.X);
             }
             else
@@ -185,8 +267,8 @@ public abstract class Enemy
                 }
             }
         }
-        else
-        velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
+        else velocity.X = playerIsRight ? Math.Abs(originalVelocity.X) : -Math.Abs(originalVelocity.X);
+       
     }
 
     public void Archer()
@@ -194,22 +276,27 @@ public abstract class Enemy
         if (isDying) return;
         var distanceToPlayer = Vector2.Distance(_player._position, position);
         velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
-        Console.WriteLine(distanceToPlayer);
     }
         
 
+    /// <summary>
+    /// Логика преследования игрока по воздуху
+    /// </summary>
     public void FlyChase()
     {
         if (isDying) return;
         velocity.X = playerIsRight ? Math.Abs(velocity.X) : -Math.Abs(velocity.X);
         velocity.Y = playerIsBottom ? -Math.Abs(velocity.Y) : Math.Abs(velocity.Y);
     }
+    /// <summary>
+    /// Логика прыжка
+    /// </summary>
     public void Jumping()
     {
         if (isDying) return;
         if (isGrounded && isStack)
         {
-            const float jumpForce = -200f;
+            const float jumpForce = -220f;
             velocity.Y = jumpForce;
             isGrounded = false;
         }
@@ -219,13 +306,13 @@ public abstract class Enemy
         position.X = newX;
     }
     
-    public Vector2 Position
-    {
-        get => position;
-        set => position = value;
-    }
-
-    public int Health => health;
-    public int Damage => damage;
+    // public Vector2 Position
+    // {
+    //     get => position;
+    //     set => position = value;
+    // }
+    //
+    // public int Health => health;
+    // public int Damage => damage;
     public Rectangle Hitbox => hitbox;
 }

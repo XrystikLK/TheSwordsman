@@ -37,38 +37,45 @@ public class Level6 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level6/level6_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level6/level6_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level6/level6_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level6/level6_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level6/level6_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level6/level6_collision.csv");
+        mapFg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("Level6/level6_fg.csv");
+        mapMg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("Level6/level6_mg.csv");
+        mapCollision = new LoadMap( "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("Level6/level6_collision.csv");
         
         enemyManager = new EnemyManager();
 
-        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(450, 580), player);
+        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(400, 580), player);
         _death = new Death(contentManager, graphicsDevice, new Vector2(250, 40), player);
         _fireSpirit = new FireSpirit(contentManager, graphicsDevice, new Vector2(800, 580), player);
         _arcaneArcher = new ArcaneArcher(contentManager, graphicsDevice, new Vector2(800, 580), player);
         
         enemyManager.AddEnemy(_fireSpirit);
-        enemyManager.AddEnemy(_arcaneArcher);
+        //enemyManager.AddEnemy(_arcaneArcher);
         enemyManager.AddEnemy(_goldSkeleton);
         enemyManager.AddEnemy(_death);
         
-        player._position = new Vector2(-25, 368);
+        player._position = new Vector2(-10, 368);
     }
 
     public void Update(GameTime gameTime)
     {
         var a = player._hitboxRect.X;
         var b = player._hitboxRect.Width;
-        if (player._hitboxRect.X + player._hitboxRect.Width < 10 && player._hitboxRect.Y < 145)
+        Console.WriteLine(enemyManager.GetEnemies().Count);
+        if (player._hitboxRect.X <= 0 && enemyManager.GetEnemies().Count != 0)
+        {
+            player._position.X = - 25;
+        }
+        
+        if (player._hitboxRect.X + player._hitboxRect.Width < 0 && player._hitboxRect.Y < 145 && enemyManager.GetEnemies().Count == 0)
         {
             sceneManager.AddScene(new Level5(contentManager, sceneManager, graphicsDevice, player));
         }
+        
         mapCollision.Update(player);
-        mapCollision.Update(_arcaneArcher);
+        //mapCollision.Update(_arcaneArcher);
         mapCollision.Update(_goldSkeleton);
         mapCollision.Update(_death);
         enemyManager.Update(gameTime);
@@ -81,4 +88,5 @@ public class Level6 : IScene
         enemyManager.Draw(spriteBatch);
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
+    public int LevelNumber { get; } = 6;
 }

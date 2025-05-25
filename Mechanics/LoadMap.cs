@@ -9,23 +9,35 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace SomeTest;
 
+/// <summary>
+/// Класс для загрузки и обработки тайловых карт
+/// </summary>
 public class LoadMap
 {
-    private Dictionary<Vector2, int> map;
-    private string _filePath;
-    private string _texturePath;
-    private Texture2D _textureAtlas;
+    private Dictionary<Vector2, int> map; // Словарь для хранения тайлов карты
+    private string _filePath; 
+    private string _texturePath; // Путь к текстуре тайлов
+    private Texture2D _textureAtlas;// Атлас текстур тайлов
     private int _tileSize;
-    private List<Rectangle> intersections;
+    private List<Rectangle> intersections; // Список пересекающихся тайлов
 
     private Texture2D TestTexture;
-    
-    public LoadMap(string filepath, string texturePath, ContentManager content,GraphicsDevice graphicsDevice,  int tileSize=16)
+    private readonly ContentManager content;
+
+    /// <summary>
+    /// Конструктор класса LoadMap
+    /// </summary>
+    /// <param name="filepath">Путь к файлу карты</param>
+    /// <param name="texturePath">Путь к текстуре тайлов</param>
+    /// <param name="content">Менеджер контента</param>
+    /// <param name="graphicsDevice">Графическое устройство</param>
+    /// <param name="tileSize">Размер тайла (по умолчанию 16)</param>
+    public LoadMap(string texturePath, ContentManager content, GraphicsDevice graphicsDevice,  int tileSize=16)
     {
-        this._filePath = filepath;
         this._texturePath = texturePath;
         this.map = new Dictionary<Vector2, int>();
         this._tileSize = tileSize;
+        this.content = content;
         
         _textureAtlas = content.Load<Texture2D>(texturePath);
         intersections = new();
@@ -33,9 +45,13 @@ public class LoadMap
         TestTexture.SetData(new[] { Color.White });
     }
 
+    /// <summary>
+    /// Загружает карту из файла
+    /// </summary>
+    /// <param name="_filePath">Путь к файлу карты</param>
     public void LoadMapp(string _filePath)
     {
-        StreamReader reader = new(_filePath);
+        StreamReader reader = new(Path.Combine(content.RootDirectory, "Maps", _filePath));
         int y = 0;
         
         string line;
@@ -53,35 +69,22 @@ public class LoadMap
             y++;
         }
     }
-
+    /// <summary>
+    /// Обновляет столкновения игрока с картой
+    /// </summary>
+    /// <param name="player">Игрок для проверки столкновений</param>
     public void Update(Player player)
     {
         if (map == null) return;
         intersections = getIntersectingTiles(player._hitboxRect);
-        var allCollisions = new List<Rectangle>();
-        foreach (var rect in intersections)
-        {
-            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
-            {
-                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                allCollisions.Add(collision);
-            }
-        }
-        var intersectionWithOX = allCollisions
-            .GroupBy(v => v.Y)                     
-            .Where(g => g.Count() > 1)            
-            .SelectMany(g => g)                    
-            .ToList();;
-        var intersectionWithOY = allCollisions
-            .Except(intersectionWithOX)                         
-            .ToList();
+        var allCollisions = ConvertTilesToWorldRectangles(intersections);
+        var (intersectionWithOX, intersectionWithOY) = SplitCollisionsByType(allCollisions);
+
         
         if (allCollisions.Count == 0) player.IsGrounded = false;
         if (allCollisions.Count == 1)
         {
-            var a = player._hitboxRect.Bottom;
-            var b = allCollisions.First().Top;
-            if (a < b + 5 || player._hitboxRect.Top + 5 > allCollisions.First().Bottom)
+            if (player._hitboxRect.Bottom < allCollisions.First().Top + 5 || player._hitboxRect.Top + 5 > allCollisions.First().Bottom)
             {
                 intersectionWithOX = allCollisions;
                 intersectionWithOY.Clear();
@@ -91,15 +94,13 @@ public class LoadMap
         var headCollision = intersectionWithOX
             .Where(collision => player._hitboxRect.Bottom + 5 > collision.Bottom)
             .ToList();
-        //Console.WriteLine(intersectionWithOX.Count);
-        //Console.WriteLine($"OX: {intersectionWithOX.Count}, OY: {intersectionWithOY.Count}, Head: {headCollision.Count}");
-        //foreach (var collision in intersectionWithOX) {Console.WriteLine(collision);}
         // Обработка столкновения по оси OY
         if (intersectionWithOX.Count != 0)
         {
             if (headCollision.Count != 0)
             {
                 player._position.Y = headCollision.First().Bottom - 11;
+                player._velocity.Y = Math.Max(1f, player._velocity.Y);
             }
             else
             {
@@ -138,50 +139,35 @@ public class LoadMap
     {
         if (map == null) return;
         intersections = getIntersectingTiles(enemy.hitbox);
-        var allCollisions = new List<Rectangle>();
-        
-        foreach (var rect in intersections)
-        {
-            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out int value))
-            {
-                Rectangle collision = new(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize);
-                allCollisions.Add(collision);
-            }
-        }
-        var intersectionWithOX = allCollisions
-            .GroupBy(v => v.Y)                     
-            .Where(g => g.Count() > 1)            
-            .SelectMany(g => g)                    
-            .ToList();;
-        var intersectionWithOY = allCollisions
-            .Except(intersectionWithOX)                         
-            .ToList();
+        var allCollisions = ConvertTilesToWorldRectangles(intersections);
+        var (intersectionWithOX, intersectionWithOY) = SplitCollisionsByType(allCollisions);
         
         if (allCollisions.Count == 0) enemy.isGrounded = false;
+        
+        // Если 1 коллизия, то он считает, что столкновение происходит с осью OY
+        // Здесь это исправляется
         if (allCollisions.Count == 1)
         {
-            var a = enemy.hitbox.Bottom;
-            var b = allCollisions.First().Top;
-            if (a < b + 5)
+            if (enemy.hitbox.Bottom < allCollisions.First().Top + 5 || enemy.hitbox.Top + 5 > allCollisions.First().Bottom)
             {
                 intersectionWithOX = allCollisions;
                 intersectionWithOY.Clear();
             }
         }
-        
+
+        //Console.WriteLine($"{intersectionWithOX.Count} {intersectionWithOY.Count}");
         // Обработка столкновения по оси OY
         if (intersectionWithOX.Count != 0)
         {
             var a = intersectionWithOX.First().Y;
             var b = enemy.hitbox.Height;
             
-            enemy.SetPositionY(intersectionWithOX.First().Y - enemy.hitbox.Height - 5);
+            enemy.SetPositionY(intersectionWithOX.First().Y - enemy.hitbox.Height - 3);
             enemy.isGrounded = true;
         }
         //Иначе игрок должен падать 
         else
             enemy.isGrounded = false;
-        
         // Обработка столкновения по оси OX
         if (intersectionWithOY.Count >= 1)
         {
@@ -189,9 +175,9 @@ public class LoadMap
             if (enemy.isGrounded)
             {
                 if (enemy.velocity.X > 0)
-                    enemy.SetPositionX(intersectionWithOX.First().X - enemy.hitbox.Width + 17);
+                    enemy.SetPositionX(intersectionWithOX.First().X - _tileSize - 4);
                 else if (enemy.velocity.X < 0)
-                    enemy.SetPositionX(intersectionWithOX[0].X - _tileSize + 2);
+                    enemy.SetPositionX(intersectionWithOX[0].X - _tileSize - 2);
             }
             // Обрабатывает столкновение игрока в воздухе
             else
@@ -203,8 +189,47 @@ public class LoadMap
             }
         }
         else enemy.isStack = false;
-                
     }
+    
+    /// <summary>
+    /// Разделяет столкновения на горизонтальные и вертикальные
+    /// </summary>
+    private (List<Rectangle> ground, List<Rectangle> walls) SplitCollisionsByType(List<Rectangle> collisions)
+    {
+        // Горизонтальные (земля/потолок) - тайлы на одной линии Y
+        var ground = collisions
+            .GroupBy(v => v.Y)
+            .Where(g => g.Count() > 1)
+            .SelectMany(g => g)
+            .ToList();
+    
+        // Вертикальные (стены) - оставшиеся тайлы
+        var walls = collisions.Except(ground).ToList();
+    
+        return (ground, walls);
+    }
+    
+    /// <summary>
+    /// Преобразует координаты тайлов в мировые координаты прямоугольников
+    /// </summary>
+    private List<Rectangle> ConvertTilesToWorldRectangles(List<Rectangle> tileRects)
+    {
+        var result = new List<Rectangle>();
+        foreach (var rect in tileRects)
+        {
+            if (map.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+            {
+                result.Add(new Rectangle(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize));
+            }
+        }
+        return result;
+    }
+    
+    /// <summary>
+    /// Находит все тайлы, пересекающиеся с целевым прямоугольником
+    /// </summary>
+    /// <param name="target">Прямоугольник для проверки</param>
+    /// <returns>Список пересекающихся тайлов</returns>
     public List<Rectangle> getIntersectingTiles(Rectangle target) {
         intersections.Clear();
         
@@ -224,13 +249,17 @@ public class LoadMap
         return intersections;
     }
     
+    /// <summary>
+    /// Отрисовывает карту и отладочную информацию
+    /// </summary>
+    /// <param name="spriteBatch">Объект для отрисовки</param>
     public void Draw(SpriteBatch spriteBatch)
     {
         if ( map== null ) return;
         int display_tilesize = _tileSize;
         int num_tiles_per_row = 15;
         int pixel_tilesize = 16;
-        
+        // Отрисовка тайлов карты
         foreach (var item in map)
         {
             Rectangle drect = new(
@@ -244,17 +273,18 @@ public class LoadMap
                 pixel_tilesize, pixel_tilesize);
             spriteBatch.Draw(_textureAtlas, drect, src, Color.White);
         }
-
+        // Отрисовка для отладки
         foreach (var rect in intersections)
         {
             spriteBatch.Draw(TestTexture, new Rectangle(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize), Color.Red * 0.5f);
         }
     }
+    /// <summary>
+    /// Очищает карту
+    /// </summary>
     public void ClearMap()
     {
-        // Удаляем все тайлы из словаря
         map = null;
-        // Сбрасываем список пересечений
         intersections = null;
     }
 }

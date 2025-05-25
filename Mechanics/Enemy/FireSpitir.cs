@@ -9,7 +9,7 @@ public class FireSpirit : Enemy
     private float gravity = 800f;
     private Texture2D debugTexture;
     public FireSpirit(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 1, damage: 25, graphicsDevice, player)
+        : base(startPosition, health: 1, damage: 15, graphicsDevice, player)
     {
         
         var walkingAnimation = new AnimatedTexture(Vector2.Zero, 0f, 0.2f, 0f);
@@ -32,9 +32,32 @@ public class FireSpirit : Enemy
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        MeleeInteractionLogic(gameTime);
+        float totalTime = (float)gameTime.TotalGameTime.TotalSeconds;
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        float total = (float)gameTime.TotalGameTime.TotalSeconds; 
+        
+        if (_player.hitboxAttack.Intersects(hitbox)) 
+        {
+            // Возможно сделать систему отталкивания, но пока так
+            if (totalTime - _lastDamageTimeEnemy >= DamageCooldown)
+            {
+                //Console.WriteLine("Enemy get damage ");
+                _lastDamageTimeEnemy = totalTime;
+                TakeDamage(_player.damage);
+            }
+        }
+            
+        if (!isDying &&_player._hitboxRect.Intersects(hitbox))
+        {
+            if (totalTime - _lastDamageTimeHero >= DamageCooldown)
+            {
+                _lastDamageTimeHero = totalTime;
+                _player.TakeDamage(damage);
+                TakeDamage(_player.damage);
+            }
+        }
+        
+        
+         
         FlyChase();
         // Применяем гравитацию, если не на земле
         
@@ -42,18 +65,19 @@ public class FireSpirit : Enemy
         position += velocity * deltaTime;
         hitbox.X = (int)(position.X) + 5;
         hitbox.Y = (int)(position.Y);
+        
         if (health >= 1) currentAnimation = "Walk";
         else currentAnimation = "Die";
-        if (!isDying && _player._hitboxRect.Intersects(hitbox))
-        {
-            float totalTime = (float)gameTime.TotalGameTime.TotalSeconds;
-            if (totalTime - _lastDamageTimeHero >= DamageCooldown)
-            {
-                _lastDamageTimeHero = totalTime;
-                _player.TakeDamage(damage);
-                TakeDamage(health); // Мгновенная смерть
-            }
-        }
+        // if (_player._hitboxRect.Intersects(hitbox))
+        // {
+        //     
+        //     if (totalTime - _lastDamageTimeHero >= DamageCooldown)
+        //     {
+        //         _lastDamageTimeHero = totalTime;
+        //         _player.TakeDamage(damage);
+        //         TakeDamage(health);
+        //     }
+        // }
         // if (_player.hitboxAttack.Intersects(hitbox))
         // {
         //     currentAnimation = "Die";
@@ -73,6 +97,6 @@ public class FireSpirit : Enemy
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
-        spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
+        //spriteBatch.Draw(debugTexture, hitbox, Color.Red * 0.5f);
     }
 }

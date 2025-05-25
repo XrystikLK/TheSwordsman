@@ -34,17 +34,17 @@ public class Level3 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level3/level3_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level3/level3_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level3/level3_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level3/level3_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level3/level3_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level3/level3_collision.csv");
+        mapFg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("Level3/level3_fg.csv");
+        mapMg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("Level3/level3_mg.csv");
+        mapCollision = new LoadMap( "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("Level3/level3_collision.csv");
         
         enemyManager = new EnemyManager();
         
         _skeleton = new Skeleton(contentManager, graphicsDevice, new Vector2(250, 450), player);
-        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(750, 325), player);
+        _goldSkeleton = new GoldSkeleton(contentManager, graphicsDevice, new Vector2(750, 310), player);
         _chest = new Chest(contentManager, graphicsDevice, new Vector2(835, 350), player);
         
         enemyManager.AddEnemy(_skeleton);
@@ -57,11 +57,18 @@ public class Level3 : IScene
     {
         var a = player._hitboxRect.X;
         var b = player._hitboxRect.Width;
-        // if (player._hitboxRect.X + player._hitboxRect.Width > 620)
-        // {
-        //     enemyManager.AddEnemy(_goldSkeleton);
-        // }
-        if (player._hitboxRect.X + player._hitboxRect.Width > 920)
+        // Ограничение, чтобы игрок не смог убежать пока есть враги
+        if (enemyManager.GetEnemies().Count != 0)
+        {
+            if (player._hitboxRect.X + player._hitboxRect.Width > 960)
+            {
+                player._position.X = 960 - 50;
+            }
+        }
+        if (player._hitboxRect.X <= 0) player._position.X = - 25; 
+        
+        
+        if (player._hitboxRect.X  > 960)
         {
             sceneManager.AddScene(new Level4(contentManager, sceneManager, graphicsDevice, player));
         }
@@ -79,4 +86,5 @@ public class Level3 : IScene
         enemyManager.Draw(spriteBatch);
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
+    public int LevelNumber { get; } = 3;
 }

@@ -14,16 +14,15 @@ public class Level8 : IScene
     private Player player;
     
     private EnemyManager enemyManager;
-    private Skeleton _skeleton;
-    private GoldSkeleton _goldSkeleton;
+    private Chest _chest;
     private FireSpirit _fireSpirit;
-    private ArcaneArcher _arcaneArcher;
-    private Death _death;
-    
+
+    private SpriteFont _font;
     private LoadMap mapFg;
     private LoadMap mapMg;
     private LoadMap mapCollision;
     private Texture2D texture;
+    private Texture2D debugTexture;
     public Level8(ContentManager contentManager, SceneManager sceneManager, GraphicsDevice graphicsDevice, Player player)
     {
         this.player = player;
@@ -37,12 +36,24 @@ public class Level8 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level8/level8_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level8/level8_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level8/level8_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level8/level8_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level8/level8_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level8/level8_collision.csv");
+        mapFg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("Level8/level8_fg.csv");
+        mapMg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("Level8/level8_mg.csv");
+        mapCollision = new LoadMap( "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("Level8/level8_collision.csv");
+        
+        debugTexture = new Texture2D(graphicsDevice, 1, 1);
+        debugTexture.SetData(new[] { Color.White });
+        _font = contentManager.Load<SpriteFont>("Fonts/Main");
+        
+        enemyManager = new EnemyManager();
+        
+        _fireSpirit = new FireSpirit(contentManager, graphicsDevice, new Vector2(435, 550), player);
+        _chest = new Chest(contentManager, graphicsDevice, new Vector2(535, 50), player);
+        
+        enemyManager.AddEnemy(_fireSpirit);
+        enemyManager.AddEnemy(_chest);
         
         player._position = new Vector2(925, 45);
     }
@@ -51,17 +62,31 @@ public class Level8 : IScene
     {
         var a = player._hitboxRect.X;
         var b = player._hitboxRect.Width;
+        if (player._hitboxRect.X + player._hitboxRect.Width > 960)
+        {
+            player._position.X = 960 - 50;
+        }
         if (player._hitboxRect.Y > 970)
         {
-            sceneManager.AddScene(new Level5(contentManager, sceneManager, graphicsDevice, player));
+            sceneManager.AddScene(new Level9(contentManager, sceneManager, graphicsDevice, player));
         }
         mapCollision.Update(player);
+        mapCollision.Update(_chest);
+        enemyManager.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         mapMg.Draw(spriteBatch);
         mapFg.Draw(spriteBatch);
+        enemyManager.Draw(spriteBatch);
+        if (player._position.Y > 950)
+        {
+            // spriteBatch.Draw(debugTexture, new Rectangle(0, 0, 960, 640), Color.Black * 0.7f);
+            // spriteBatch.DrawString(_font, "To be continued..", new Vector2(350, 320), Color.Red);
+            //spriteBatch.DrawString(_font, "Нажмите R что начать заново", new Vector2(300, 350), Color.Red);
+        }
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
+    public int LevelNumber { get; } = 8;
 }

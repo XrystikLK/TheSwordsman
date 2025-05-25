@@ -38,12 +38,12 @@ public class Level5 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level5/level5_7_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level5/level5_7_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level5/level5_7_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level5/level5_7_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level5/level5_7_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level5/level5_7_collision.csv");
+        mapFg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("Level5/level5_7_fg.csv");
+        mapMg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("Level5/level5_7_mg.csv");
+        mapCollision = new LoadMap( "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("Level5/level5_7_collision.csv");
         enemyManager = new EnemyManager();
         if (sceneManager.scenesStack.Count >= 6)
         {
@@ -54,7 +54,7 @@ public class Level5 : IScene
         else
         {
             _fireSpirit = new FireSpirit(contentManager, graphicsDevice, new Vector2(450, 50), player);
-            _arcaneArcher = new ArcaneArcher(contentManager, graphicsDevice, new Vector2(750, 378), player);
+            _arcaneArcher = new ArcaneArcher(contentManager, graphicsDevice, new Vector2(780, 378), player);
         
             enemyManager.AddEnemy(_fireSpirit);
             enemyManager.AddEnemy(_arcaneArcher);
@@ -68,15 +68,36 @@ public class Level5 : IScene
         
         var a = player._hitboxRect.X;
         var b = player._hitboxRect.Width;
-        if (player._hitboxRect.X + player._hitboxRect.Width > 940 && sceneManager.scenesStack.Count == 5)
-        {
-            sceneManager.AddScene(new Level6(contentManager, sceneManager, graphicsDevice, player));
-        }
+        
+        Console.WriteLine(sceneManager.scenesStack.Count);
 
-        if (player._hitboxRect.X + player._hitboxRect.Width < 20 && player._hitboxRect.Y <= 150)
+        if (sceneManager.scenesStack.Count == 5 )
         {
-            sceneManager.AddScene(new Level8(contentManager, sceneManager, graphicsDevice, player));
+            // Ограничение, чтобы игрок не смог убежать пока есть враги
+            if (enemyManager.GetEnemies().Count != 0)
+            {
+                if (player._hitboxRect.X <= 0) player._position.X = - 25;
+                if (player._hitboxRect.X > 940) sceneManager.AddScene(new Level6(contentManager, sceneManager, graphicsDevice, player));
+            }
+            
+            else if (player._hitboxRect.X > 940)
+            {
+                sceneManager.AddScene(new Level6(contentManager, sceneManager, graphicsDevice, player));
+            }
         }
+        else
+        {
+            if (player._hitboxRect.X + player._hitboxRect.Width > 960) 
+            {
+                player._position.X = 960 - 50; 
+            } 
+           if (player._hitboxRect.X + player._hitboxRect.Width < 20 && player._hitboxRect.Y <= 150)
+           { 
+               sceneManager.AddScene(new Level8(contentManager, sceneManager, graphicsDevice, player));
+           }  
+        }
+        
+        
         mapCollision.Update(player);
         
         if (sceneManager.scenesStack.Count >= 6)
@@ -97,4 +118,5 @@ public class Level5 : IScene
         enemyManager.Draw(spriteBatch);
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
+    public int LevelNumber { get; } = 5;
 }

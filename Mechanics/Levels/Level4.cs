@@ -37,12 +37,12 @@ public class Level4 : IScene
     {
         texture = contentManager.Load<Texture2D>("TextureAtlas/All_content");
         
-        mapFg = new LoadMap("../../../Maps/Level4/level4_fg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapFg.LoadMapp("../../../Maps/Level4/level4_fg.csv");
-        mapMg = new LoadMap("../../../Maps/Level4/level4_mg.csv", "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
-        mapMg.LoadMapp("../../../Maps/Level4/level4_mg.csv");
-        mapCollision = new LoadMap("../../../Maps/Level4/level4_collision.csv", "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
-        mapCollision.LoadMapp("../../../Maps/Level4/level4_collision.csv");
+        mapFg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapFg.LoadMapp("Level4/level4_fg.csv");
+        mapMg = new LoadMap( "TextureAtlas/Dungeon", contentManager, graphicsDevice, 16);
+        mapMg.LoadMapp("Level4/level4_mg.csv");
+        mapCollision = new LoadMap( "TextureAtlas/ALL_content", contentManager, graphicsDevice, 16);
+        mapCollision.LoadMapp("Level4/level4_collision.csv");
         
         player._position = new Vector2(-25, 250);
     }
@@ -51,7 +51,10 @@ public class Level4 : IScene
     {
         var a = player._hitboxRect.X;
         var b = player._hitboxRect.Width;
-        if (player._hitboxRect.X + player._hitboxRect.Width > 900)
+        
+        if (player._hitboxRect.X <= 0) player._position.X = - 25;
+        
+        if (player._hitboxRect.X + player._hitboxRect.Width > 960)
         {
             sceneManager.AddScene(new Level5(contentManager, sceneManager, graphicsDevice, player));
         }
@@ -59,6 +62,7 @@ public class Level4 : IScene
         if (player._hitboxRect.Y >= 645)
         {
             player._position = new Vector2(-25, 250);
+            player._velocity.Y = 0;
         }
     }
 
@@ -68,4 +72,5 @@ public class Level4 : IScene
         mapFg.Draw(spriteBatch);
         //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
+    public int LevelNumber { get; } = 4;
 }

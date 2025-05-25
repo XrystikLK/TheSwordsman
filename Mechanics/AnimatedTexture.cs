@@ -3,14 +3,14 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 /// <summary>
-/// A helper class for handling animated textures.
+/// Класс, для загрузки анимированных текстур
 /// </summary>
 public class AnimatedTexture
 {
     private int frameCount;
     private Texture2D myTexture;
     private float timePerFrame;
-    private int frame;
+    public int frame;
     private float totalElapsed;
     private bool isPaused;
     private bool isHidden;

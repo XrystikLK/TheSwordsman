@@ -10,7 +10,7 @@ public class Chest : Enemy
     private Texture2D debugTexture;
     private bool _isActive = false;
     public Chest(ContentManager content, GraphicsDevice graphicsDevice, Vector2 startPosition, Player player)
-        : base(startPosition, health: 75, damage: 10, graphicsDevice, player)
+        : base(startPosition, health: 50, damage: 10, graphicsDevice, player)
     {
         
         var attackAnimation = new AnimatedTexture(Vector2.Zero, 0f, 1.1f, 0f);
@@ -45,45 +45,39 @@ public class Chest : Enemy
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        
-        Console.WriteLine(hitbox);
-        
+        MeleeInteractionLogic(gameTime);
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        float total = (float)gameTime.TotalGameTime.TotalSeconds;
-        Chase();
-        Jumping();
         // Применяем гравитацию, если не на земле
         if (!isGrounded)
         {
             velocity.Y += gravity * deltaTime;
         }
-        if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting))
-        {
-            // 4) Логика нанесения урона монстру
-            if (_player.hitboxAttack.Intersects(hitbox)) 
-            {
-                // Возможно сделать систему отталкивания, но пока так
-                if (total - _lastDamageTimeEnemy >= DamageCooldown)
-                {
-                    //Console.WriteLine("Enemy get damage ");
-                    _lastDamageTimeEnemy = total;
-                    TakeDamage(_player.damage);
-                }
-            }
-            // 3) Логика столкновений и урона
-            if (_player._hitboxRect.Intersects(hitbox))
-            {
-                if (total - _lastDamageTimeHero >= DamageCooldown)
-                {
-                    _lastDamageTimeHero = total;
-                    _player.TakeDamage(damage);
-                    //Нужно сделать чтобы игрока отталкивало назад при столкновении
-                    //Console.WriteLine("Enemy hit player");
-                }
-            
-            }
-        }
-        
+        // if ((_player._hitboxRect.Intersects(hitbox) || _player.hitboxAttack.Intersects(hitbox) || isHurting))
+        // {
+        //     // 4) Логика нанесения урона монстру
+        //     if (_player.hitboxAttack.Intersects(hitbox)) 
+        //     {
+        //         // Возможно сделать систему отталкивания, но пока так
+        //         if (total - _lastDamageTimeEnemy >= DamageCooldown)
+        //         {
+        //             //Console.WriteLine("Enemy get damage ");
+        //             _lastDamageTimeEnemy = total;
+        //             TakeDamage(_player.damage);
+        //         }
+        //     }
+        //     // 3) Логика столкновений и урона
+        //     if (_player._hitboxRect.Intersects(hitbox))
+        //     {
+        //         if (total - _lastDamageTimeHero >= DamageCooldown)
+        //         {
+        //             _lastDamageTimeHero = total;
+        //             _player.TakeDamage(damage);
+        //             //Нужно сделать чтобы игрока отталкивало назад при столкновении
+        //             //Console.WriteLine("Enemy hit player");
+        //         }
+        //     
+        //     }
+        // }
         _previousAnimation = currentAnimation;
         position += velocity * deltaTime;
         hitbox.X = (int)(position.X) + 15;
@@ -92,10 +86,15 @@ public class Chest : Enemy
         {
             isHurting = true;
         }
+        
         if (isHurting)
         {
             currentAnimation = "Hurt";
-            if (animations["Hurt"].IsAnimationComplete) isHurting = false;
+            if (animations["Hurt"].IsAnimationComplete)
+            {
+                isHurting = false;
+                currentAnimation = "Walk";
+            }
         }
         else if (_player._hitboxRect.Intersects(hitbox) && !isDying)
         {
@@ -103,11 +102,11 @@ public class Chest : Enemy
             _isActive = true;
         }
         else if (_isActive) currentAnimation = "Walk";
-        
         if (health <= 0){
             currentAnimation = "Die";
             //gravity = 0;
         };
+        
     }
     public override void Draw(SpriteBatch spriteBatch)
     {
