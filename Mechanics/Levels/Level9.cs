@@ -162,45 +162,6 @@ public class Level9 : IScene
             Console.WriteLine(timer);
             _fadeAlpha = Math.Min(_fadeAlpha + 0.2f * (float)gameTime.ElapsedGameTime.TotalSeconds, 1f);
         }
-        // if (_boss.health < 450 && !_boss._isImmuneStage)
-        // {
-        //     Console.WriteLine("Start Immune stage");
-        //     _boss.StartImmuneStage();
-        //     StartMonsterWave(enemyManager);
-        //     _isWaveStarted = true;
-        //     
-        //     // if (enemyManager.GetEnemies().Count == 1)
-        //     // {
-        //     //     Console.WriteLine("Stop Immune stage");
-        //     //     _isWaveStarted = false;
-        //     //     _boss.StopImmuneStage();
-        //     // }
-        // }
-        //
-        // if (enemyManager.GetEnemies().Count == 1 && _isWaveStarted)
-        // {
-        //     Console.WriteLine("End Immune stage");
-        //     _boss.StopImmuneStage();
-        // }
-        //
-            //Console.WriteLine(enemyManager.GetEnemies().Count);
-        // if (enemyManager.GetEnemies().Count == 1)
-        // {
-        //     Console.WriteLine("Stop Immune stage");
-        //     _isWaveStarted = false;
-        //     _boss.StopImmuneStage();
-        // }
-        
-        // else if (_isWaveStarted && enemyManager.GetEnemies().Count == 1 && !_boss._isImmuneStage)
-        // {
-        //     
-        // }
-        // Тут нужно будет спавнить мобов
-        
-        // if (player._hitboxRect.Y > 970)
-        // {
-        //     sceneManager.AddScene(new Level5(contentManager, sceneManager, graphicsDevice, player));
-        // }
         mapCollision.Update(player);
         mapCollision.Update(_boss);
         enemyManager.Update(gameTime);
@@ -221,7 +182,6 @@ public class Level9 : IScene
             if (_boss.health <= 200)
             {
                 Console.WriteLine("Start 2");
-                // Нужно создавать новый экземпляр класса _fireSpitir
                 enemyManager.AddEnemy(_fireSpirit2);
                 enemyManager.AddEnemy(_fireSpirit3);
                 enemyManager.AddEnemy(_death);

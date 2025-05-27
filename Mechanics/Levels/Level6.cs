@@ -52,7 +52,6 @@ public class Level6 : IScene
         _arcaneArcher = new ArcaneArcher(contentManager, graphicsDevice, new Vector2(800, 580), player);
         
         enemyManager.AddEnemy(_fireSpirit);
-        //enemyManager.AddEnemy(_arcaneArcher);
         enemyManager.AddEnemy(_goldSkeleton);
         enemyManager.AddEnemy(_death);
         
@@ -75,7 +74,6 @@ public class Level6 : IScene
         }
         
         mapCollision.Update(player);
-        //mapCollision.Update(_arcaneArcher);
         mapCollision.Update(_goldSkeleton);
         mapCollision.Update(_death);
         enemyManager.Update(gameTime);
@@ -86,7 +84,6 @@ public class Level6 : IScene
         mapMg.Draw(spriteBatch);
         mapFg.Draw(spriteBatch);
         enemyManager.Draw(spriteBatch);
-        //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
     public int LevelNumber { get; } = 6;
 }

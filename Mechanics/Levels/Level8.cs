@@ -80,13 +80,6 @@ public class Level8 : IScene
         mapMg.Draw(spriteBatch);
         mapFg.Draw(spriteBatch);
         enemyManager.Draw(spriteBatch);
-        if (player._position.Y > 950)
-        {
-            // spriteBatch.Draw(debugTexture, new Rectangle(0, 0, 960, 640), Color.Black * 0.7f);
-            // spriteBatch.DrawString(_font, "To be continued..", new Vector2(350, 320), Color.Red);
-            //spriteBatch.DrawString(_font, "Нажмите R что начать заново", new Vector2(300, 350), Color.Red);
-        }
-        //spriteBatch.Draw(texture, Vector2.Zero, Color.White);
     }
     public int LevelNumber { get; } = 8;
 }
