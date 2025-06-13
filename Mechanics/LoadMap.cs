@@ -255,28 +255,43 @@ public class LoadMap
     /// <param name="spriteBatch">Объект для отрисовки</param>
     public void Draw(SpriteBatch spriteBatch)
     {
-        if ( map== null ) return;
-        int display_tilesize = _tileSize;
-        int num_tiles_per_row = 15;
-        int pixel_tilesize = 16;
-        // Отрисовка тайлов карты
-        foreach (var item in map)
+        if (map == null) return;
+    
+        int RenderedTileSize = _tileSize;
+        const int TextureTilesPerLine = 15;
+        const int SourceTileDimension = 16;
+    
+        // Визуализация основного слоя карты
+        foreach (KeyValuePair<Vector2, int> tile in map)
         {
-            Rectangle drect = new(
-                (int)item.Key.X * display_tilesize, (int)item.Key.Y * display_tilesize,
-                display_tilesize, display_tilesize);
+            var destinationRect = new Rectangle(
+                (int)tile.Key.X * RenderedTileSize,
+                (int)tile.Key.Y * RenderedTileSize,
+                RenderedTileSize,
+                RenderedTileSize);
+        
+            int textureX = tile.Value % TextureTilesPerLine;
+            int textureY = tile.Value / TextureTilesPerLine;
+        
+            var sourceRect = new Rectangle(
+                textureX * SourceTileDimension,
+                textureY * SourceTileDimension,
+                SourceTileDimension,
+                SourceTileDimension);
             
-            int x = item.Value % num_tiles_per_row;
-            int y = item.Value / num_tiles_per_row;
-            Rectangle src = new(
-                x * pixel_tilesize, y * pixel_tilesize,
-                pixel_tilesize, pixel_tilesize);
-            spriteBatch.Draw(_textureAtlas, drect, src, Color.White);
+            spriteBatch.Draw(_textureAtlas, destinationRect, sourceRect, Color.White);
         }
-        // Отрисовка для отладки
-        foreach (var rect in intersections)
+    
+        // Визуализация (для отладки)
+        foreach (Rectangle collisionArea in intersections)
         {
-            spriteBatch.Draw(TestTexture, new Rectangle(rect.X * _tileSize, rect.Y * _tileSize, _tileSize, _tileSize), Color.Red * 0.5f);
+            var debugRect = new Rectangle(
+                collisionArea.X * _tileSize,
+                collisionArea.Y * _tileSize,
+                _tileSize,
+                _tileSize);
+            
+            spriteBatch.Draw(TestTexture, debugRect, Color.Red * 0.5f);
         }
     }
     /// <summary>
