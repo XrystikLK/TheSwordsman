@@ -14,14 +14,14 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
+        <None Remove="TheSwordsman.ico"/>
+        <None Remove="TheSwordsman.bmp"/>
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Icon.ico">
+        <EmbeddedResource Include="TheSwordsman.ico">
             <LogicalName>Icon.ico</LogicalName>
         </EmbeddedResource>
-        <EmbeddedResource Include="Icon.bmp">
+        <EmbeddedResource Include="TheSwordsman.bmp">
             <LogicalName>Icon.bmp</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
